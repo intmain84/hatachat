@@ -56,6 +56,9 @@
 }
 
 .upload-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   height: 104px;
   width: 104px;

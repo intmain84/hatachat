@@ -62,6 +62,8 @@ input[type='password'] {
   border: none;
   padding: 0 16px;
   width: 100%;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 input::placeholder {
