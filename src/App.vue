@@ -18,6 +18,8 @@ import { RouterView } from 'vue-router'
   --darker-background: #2f3341;
   --dark-background: #353a4a;
 
+  --dark-elements: #1e212a;
+
   --primary-radius: 9px;
 }
 
@@ -48,8 +50,22 @@ h6 {
   color: #fff;
 }
 
+p {
+  color: #fff;
+  font-size: 1rem;
+}
+
 .mb-24 {
   margin-bottom: 24px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.icon24 {
+  width: 24px;
+  height: 24px;
 }
 
 input[type='text'],
@@ -106,5 +122,11 @@ a {
 
 a:hover {
   color: var(--primary-color-hover);
+}
+
+.container {
+  display: grid;
+  height: 100vh;
+  width: 100vw;
 }
 </style>

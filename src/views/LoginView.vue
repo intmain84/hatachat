@@ -18,11 +18,6 @@
 </template>
 
 <style scoped>
-.container {
-  display: grid;
-  height: 100vh;
-}
-
 .auth-header {
   height: 64px;
   text-align: center;
