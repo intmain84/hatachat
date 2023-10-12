@@ -363,6 +363,7 @@ const isFieldActive = ref(false)
   background: var(--dark-elements);
   border-radius: 8px;
   z-index: 2;
+  box-shadow: 0px -4px 7px 0px rgba(0, 0, 0, 0.12);
 }
 
 .user-chat-footer .icon {
@@ -389,8 +390,9 @@ const isFieldActive = ref(false)
   color: #fff;
   z-index: 1;
   border-radius: 8px;
-  overflow: hidden;
+  overflow-y: scroll;
   padding-bottom: 64px;
+  padding-top: 88px;
 }
 
 .chat-room .messages-container .messages-group {
@@ -405,24 +407,52 @@ const isFieldActive = ref(false)
 
 .message-container {
   background: var(--dark-elements);
-  border-radius: 8px;
   padding: 16px;
-  max-width: 388px;
+  max-width: 510px;
   color: #fff;
-  margin-bottom: 16px;
+  margin-top: 8px;
 }
 
 .message-left {
+  position: relative;
   align-self: flex-start;
+  border-radius: 8px 8px 8px 0;
+}
+
+.message-left:before {
+  position: absolute;
+  bottom: 0;
+  left: -8px;
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="24" viewBox="0 0 8 24" fill="none"><path d="M0 24H8V0L7.17679 7.76173C6.53735 13.7907 4.0279 19.4686 0 24Z" fill="%231E212A"/></svg>');
+  width: 8px;
+  height: 24px;
+  z-index: 3;
 }
 
 .message-right {
+  position: relative;
   align-self: flex-end;
+  background: #936ac8;
+  border-radius: 8px 8px 0 8px;
+  margin-right: 8px;
+}
+
+.message-right:after {
+  position: absolute;
+  bottom: 0;
+  right: -8px;
+  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="24" viewBox="0 0 8 24" fill="none"><path d="M0 24H8V0L7.17679 7.76173C6.53735 13.7907 4.0279 19.4686 0 24" fill="%23936ac8"/></svg>');
+  width: 8px;
+  color: #936ac8;
+  transform: scale(-1, 1);
+  height: 24px;
+  z-index: 3;
 }
 
 .messages-group {
   display: flex;
   flex-direction: column;
+  padding: 0 8px;
 }
 
 .message-container .nickname {
