@@ -25,21 +25,12 @@ const isFieldActive = ref(false) // Чтобы поле соообщения п�
         <div class="messages-date">Today</div>
         <MessageBubble class="message-left" />
         <MessageBubble class="message-right" />
-        <MessageBubble class="message-right" />
-        <MessageBubble class="message-left" />
-        <MessageBubble class="message-right" />
       </div>
       <div class="messages-group">
         <div class="messages-date">September 12</div>
         <MessageBubble class="message-left" />
         <MessageBubble class="message-right" />
         <MessageBubble class="message-left" />
-        <MessageBubble class="message-right" />
-        <MessageBubble class="message-right" />
-        <MessageBubble class="message-left" />
-        <MessageBubble class="message-right" />
-        <MessageBubble class="message-right" />
-        <MessageBubble class="message-right" />
       </div>
     </div>
 
@@ -60,6 +51,15 @@ const isFieldActive = ref(false) // Чтобы поле соообщения п�
 </template>
 
 <style scoped>
+/* Chat Room */
+.chat-room {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
 .user-chat-header {
   width: 100%;
   background: var(--dark-elements);
@@ -115,17 +115,17 @@ const isFieldActive = ref(false) // Чтобы поле соообщения п�
 }
 
 .chat-room .messages-container {
+  padding-top: 16px;
   display: flex;
   flex-direction: column-reverse;
   position: absolute !important;
+  top: 74px;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 130px);
   color: #fff;
   z-index: 1;
   border-radius: 8px;
-  overflow-y: scroll;
-  padding-bottom: 64px;
-  padding-top: 88px;
+  overflow-y: auto;
 }
 
 .chat-room .messages-container .messages-group {
@@ -144,6 +144,7 @@ const isFieldActive = ref(false) // Чтобы поле соообщения п�
   max-width: 510px;
   color: #fff;
   margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .message-left {

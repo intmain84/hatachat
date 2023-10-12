@@ -182,14 +182,4 @@ const messages = ref([
 .nochat {
   text-align: center;
 }
-
-/* Chat Room */
-.chat-room {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-}
 </style>
