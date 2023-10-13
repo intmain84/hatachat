@@ -77,6 +77,8 @@ const messages = ref([
     text: 'The hike up the mountain was breathtaking, and we even saw a rare bird in its natural habitat.'
   }
 ])
+
+const showRoom = (userId) => {}
 </script>
 
 <template>
@@ -87,7 +89,12 @@ const messages = ref([
           <a href="#" class="btn">Create a group</a>
         </header> -->
         <ul>
-          <UserPreview v-for="chat in chatList" :key="chat.id" :chat="chat" />
+          <UserPreview
+            v-for="chat in chatList"
+            :key="chat.id"
+            :chat="chat"
+            @click="showRoom(chat.id)"
+          />
         </ul>
       </div>
       <footer class="sidebar-footer">
@@ -96,11 +103,7 @@ const messages = ref([
       </footer>
     </aside>
     <main class="main">
-      <!-- <div class="nochat">
-        <h1 class="mb-16">Hey, Lexaxa!</h1>
-        <p>Choose anyone and start chatting</p>
-      </div> -->
-      <ChatRoomView />
+      <ChatRoomView :isUserSelected="1" />
     </main>
   </div>
 </template>
@@ -178,8 +181,5 @@ const messages = ref([
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.nochat {
-  text-align: center;
 }
 </style>
