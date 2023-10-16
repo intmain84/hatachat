@@ -2,7 +2,10 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useChatStore = defineStore('chat', () => {
-  const currentUserId = '1'
+  const currentUser = ref({
+    userId: '1',
+    nickname: 'Arthur'
+  })
   const users = ref([
     {
       id: 1,
@@ -213,14 +216,17 @@ export const useChatStore = defineStore('chat', () => {
 
   const getChatList = computed(() => {
     let noCurrentUserChatList = []
-    noCurrentUserChatList = users.value.filter((user) => user.id != currentUserId)
-    console.log(noCurrentUserChatList)
+    noCurrentUserChatList = users.value.filter((user) => user.id != currentUser.value.userId)
     return noCurrentUserChatList
+  })
+
+  const getCurrentUser = computed(() => {
+    return currentUser
   })
 
   // function increment() {
   //   count.value++
   // }
 
-  return { getChatList }
+  return { getChatList, getCurrentUser }
 })

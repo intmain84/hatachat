@@ -3,20 +3,13 @@ import MessageBubble from '@/components/MessageBubble.vue'
 import { FaceSmileIcon } from '@heroicons/vue/24/outline'
 import { PaperAirplaneIcon } from '@heroicons/vue/24/outline'
 
-import { ref, toRefs } from 'vue'
+import { ref } from 'vue'
 
-const props = defineProps(['isUserSelected'])
-const { isUserSelected } = toRefs(props)
-console.log(isUserSelected)
 const isFieldActive = ref(false) // Чтобы поле соообщения подсвечивать когда на него нажимаешь
 </script>
 
 <template>
-  <div v-if="!isUserSelected" class="nochat">
-    <h1 class="mb-16">Hey, Lexaxa!</h1>
-    <p>Choose anyone and start chatting</p>
-  </div>
-  <div v-else class="chat-room">
+  <div class="chat-room">
     <header class="user-chat-header">
       <div class="user-preview">
         <img class="avatar" src="https://vuesax.com/avatars/avatar-8.png" alt="" />
@@ -58,9 +51,6 @@ const isFieldActive = ref(false) // Чтобы поле соообщения п�
 </template>
 
 <style scoped>
-.nochat {
-  text-align: center;
-}
 /* Chat Room */
 .chat-room {
   position: relative;

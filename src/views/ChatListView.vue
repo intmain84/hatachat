@@ -2,10 +2,10 @@
 import { UserCircleIcon } from '@heroicons/vue/24/outline'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import ChatPreview from '@/components/ChatPreview.vue'
-import ChatRoomView from './ChatRoomView.vue'
 
-// import { ref } from 'vue'
+import { ref } from 'vue'
 import { useChatStore } from '@/stores/chat'
+import { RouterView, useRouter } from 'vue-router'
 
 const store = useChatStore()
 
@@ -36,7 +36,14 @@ const store = useChatStore()
 //   }
 // ])
 
-// const showRoom = (userId) => {}
+const router = useRouter()
+
+const noChatSelected = ref(true)
+
+const showRoom = (userId) => {
+  noChatSelected.value = false
+  router.push({ name: 'chatroom', params: { chatId: userId } })
+}
 </script>
 
 <template>
@@ -61,12 +68,19 @@ const store = useChatStore()
       </footer>
     </aside>
     <main class="main">
-      <ChatRoomView :isUserSelected="0" />
+      <div v-if="noChatSelected" class="nochat">
+        <h1 class="mb-16">Hey, {{ store.getCurrentUser.value.nickname }}!</h1>
+        <p>Choose anyone and start chatting</p>
+      </div>
+      <RouterView></RouterView>
     </main>
   </div>
 </template>
 
 <style scoped>
+.nochat {
+  text-align: center;
+}
 .container {
   display: grid;
   grid-template-columns: 288px auto;
