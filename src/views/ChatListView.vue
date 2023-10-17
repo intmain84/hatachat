@@ -9,39 +9,13 @@ import { RouterView, useRouter } from 'vue-router'
 
 const store = useChatStore()
 
-// const chatList = ref([
-//   {
-//     id: 1,
-//     avatar: 'https://vuesax.com/avatars/avatar-5.png',
-//     nickname: 'Rustamka',
-//     newMessages: 1,
-//     messageTime: '14:35',
-//     message: 'Haha! You think that’s all I wante to hear'
-//   },
-//   {
-//     id: 2,
-//     avatar: 'https://vuesax.com/avatars/avatar-8.png',
-//     nickname: 'Igor',
-//     newMessages: 0,
-//     messageTime: '13:56',
-//     message: 'Salam! How you doing today?'
-//   },
-//   {
-//     id: 3,
-//     avatar: 'https://vuesax.com/avatars/avatar-7.png',
-//     nickname: 'Marat',
-//     newMessages: 1,
-//     messageTime: '13:47',
-//     message: 'Every once in a while, i will be in iMessage'
-//   }
-// ])
-
 const router = useRouter()
 
 const noChatSelected = ref(true)
 
-const showRoom = (userId) => {
+const showRoom = async (userId) => {
   noChatSelected.value = false
+  await store.getChatRoom(userId)
   router.push({ name: 'chatroom', params: { chatId: userId } })
 }
 </script>
@@ -69,7 +43,7 @@ const showRoom = (userId) => {
     </aside>
     <main class="main">
       <div v-if="noChatSelected" class="nochat">
-        <h1 class="mb-16">Hey, {{ store.getCurrentUser.value.nickname }}!</h1>
+        <h1 class="mb-16">Hey, {{ store.getCurrentUser }}!</h1>
         <p>Choose anyone and start chatting</p>
       </div>
       <RouterView></RouterView>

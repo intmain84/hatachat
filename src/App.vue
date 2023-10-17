@@ -1,5 +1,14 @@
 <script setup>
 import { RouterView } from 'vue-router'
+import { useChatStore } from './stores/chat'
+import { onMounted } from 'vue'
+
+const store = useChatStore()
+
+onMounted(() => {
+  const currentUserId = '1'
+  store.setCurrentUser(currentUserId)
+})
 </script>
 
 <template>
