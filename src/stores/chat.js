@@ -15,9 +15,16 @@ export const useChatStore = defineStore('chat', () => {
     {
       id: '2',
       avatar: 'https://vuesax.com/avatars/avatar-3.png',
-      email: 'peter@gmail.com',
+      email: 'petra@gmail.com',
       nickname: 'Petra',
       password: 'pass2'
+    },
+    {
+      id: '3',
+      avatar: 'https://vuesax.com/avatars/avatar-8.png',
+      email: 'bell@gmail.com',
+      nickname: 'Micah',
+      password: 'pass3'
     }
   ])
 
@@ -26,87 +33,115 @@ export const useChatStore = defineStore('chat', () => {
       id: 1,
       users: ['1', '2'],
       lastMessage: {
-        text: null,
-        fromUser: '2',
+        text: "If you continue to interrupt me, I'll kill you, boy",
+        fromUser: '1',
         createdAtDate: '12.09.2023',
         createdAtTime: '20:05'
+      }
+    },
+    {
+      id: 2,
+      users: ['2', '3'],
+      lastMessage: {
+        text: 'Very simple and regular text for message',
+        fromUser: '3',
+        createdAtDate: '12.09.2023',
+        createdAtTime: '16:44'
+      }
+    },
+    {
+      id: 3,
+      users: ['3', '1'],
+      lastMessage: {
+        text: "You ain't gonna get that gun, blacklung",
+        fromUser: '3',
+        createdAtDate: '12.09.2023',
+        createdAtTime: '18:37'
       }
     }
   ])
 
   const messages = ref([
-    // {
-    //   id: 1,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '14:30',
-    //   toUser: 1,
-    //   fromUser: 2,
-    //   text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
-    // },
-    // {
-    //   id: 2,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '15:15',
-    //   toUser: 2,
-    //   fromUser: 3,
-    //   text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
-    // },
-    // {
-    //   id: 3,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '16:00',
-    //   toUser: 3,
-    //   fromUser: 1,
-    //   text: "Apologies, party isn't in the cards; family reunion takes precedence. We'll reconnect soon!"
-    // },
-    // {
-    //   id: 4,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '17:45',
-    //   toUser: 1,
-    //   fromUser: 3,
-    //   text: "I regret missing the party; family reunion conflict, but let's schedule a meetup!"
-    // },
-    // {
-    //   id: 5,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '18:20',
-    //   toUser: 2,
-    //   fromUser: 1,
-    //   text: "Count me out for the party, family reunion this weekend. Let's plan a get-together soon!"
-    // },
-    // {
-    //   id: 6,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '19:10',
-    //   toUser: 1,
-    //   fromUser: 3,
-    //   text: "Party's a miss due to family reunion commitments. We must catch up soon!"
-    // },
-    // {
-    //   id: 7,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '20:05',
-    //   toUser: 1,
-    //   fromUser: 2,
-    //   text: "I'm sorry, can't make it to the party. Family reunion this weekend, but let's meet up soon!"
-    // },
-    // {
-    //   id: 8,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '21:30',
-    //   toUser: 2,
-    //   fromUser: 3,
-    //   text: "Change of plans, can't attend the party; family reunion is the priority. Let's connect later!"
-    // },
+    {
+      id: 1,
+      chatId: 1,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '14:30',
+      toUser: 1,
+      fromUser: 2,
+      text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
+    },
+    {
+      id: 2,
+      chatId: 2,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '15:15',
+      toUser: 2,
+      fromUser: 3,
+      text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
+    },
+    {
+      id: 3,
+      chatId: 3,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '16:00',
+      toUser: 3,
+      fromUser: 1,
+      text: "Apologies, party isn't in the cards; family reunion takes precedence. We'll reconnect soon!"
+    },
+    {
+      id: 4,
+      chatId: 3,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '17:45',
+      toUser: 1,
+      fromUser: 3,
+      text: "I regret missing the party; family reunion conflict, but let's schedule a meetup!"
+    },
+    {
+      id: 5,
+      chatId: 1,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '18:20',
+      toUser: 2,
+      fromUser: 1,
+      text: "Count me out for the party, family reunion this weekend. Let's plan a get-together soon!"
+    },
+    {
+      id: 6,
+      chatId: 3,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '19:10',
+      toUser: 1,
+      fromUser: 3,
+      text: "Party's a miss due to family reunion commitments. We must catch up soon!"
+    },
+    {
+      id: 7,
+      chatId: 1,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '20:05',
+      toUser: 1,
+      fromUser: 2,
+      text: "I'm sorry, can't make it to the party. Family reunion this weekend, but let's meet up soon!"
+    },
+    {
+      id: 8,
+      chatId: 2,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '21:30',
+      toUser: 2,
+      fromUser: 3,
+      text: "Change of plans, can't attend the party; family reunion is the priority. Let's connect later!"
+    }
     // {
     //   id: 9,
     //   isRead: true,
@@ -223,11 +258,19 @@ export const useChatStore = defineStore('chat', () => {
     currentUser.value = currentUserId
   }
 
+  const getChatRoom = (selectedUserId) => {
+    let [selectedChat] = chats.value.filter(
+      (chat) => chat.users.includes(selectedUserId) && chat.users.includes(currentUser.value)
+    )
+    return selectedChat
+  }
+
   //Getters
   //Получение списка всех юзеров приложения кроме тебя
   const getChatList = computed(() => {
     let noCurrentUserChatList = []
-    noCurrentUserChatList = users.value.filter((user) => user.id != currentUser.value)
+    noCurrentUserChatList = chats.value.filter((chat) => chat.users.includes(currentUser.value))
+    console.log(noCurrentUserChatList)
     return noCurrentUserChatList
   })
 
@@ -247,6 +290,7 @@ export const useChatStore = defineStore('chat', () => {
     getCurrentUser,
 
     //Actions
-    setCurrentUser
+    setCurrentUser,
+    getChatRoom
   }
 })

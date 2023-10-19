@@ -15,7 +15,8 @@ const noChatSelected = ref(true)
 
 const showRoom = async (userId) => {
   noChatSelected.value = false
-  await store.getChatRoom(userId)
+  const selectedChatRoom = await store.getChatRoom(userId)
+  console.log(selectedChatRoom)
   router.push({ name: 'chatroom', params: { chatId: userId } })
 }
 </script>
