@@ -5,7 +5,7 @@ import ChatPreview from '@/components/ChatPreview.vue'
 
 import { ref, onMounted } from 'vue'
 import { useChatStore } from '@/stores/chat'
-import { RouterView, useRouter, useRoute } from 'vue-router'
+import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
 
 const store = useChatStore()
 
@@ -16,7 +16,7 @@ const noChatSelected = ref(true)
 
 const showChatRoom = (chatId) => {
   noChatSelected.value = false
-  router.push(`/chatlist/${chatId}`)
+  router.push({ name: 'chatroom', params: { chatId: chatId } })
 }
 
 onMounted(() => {
@@ -42,15 +42,16 @@ onMounted(() => {
         </ul>
       </div>
       <footer class="sidebar-footer">
-        <a href="#"><UserCircleIcon class="icon24" /> My account</a>
+        <RouterLink to="myaccount">My account</RouterLink>
+        <!-- <a href="#"><UserCircleIcon class="icon24" /> My account</a> -->
         <a href="#"><ArrowRightOnRectangleIcon class="icon24" /> Logout</a>
       </footer>
     </aside>
     <main class="main">
-      <div v-if="noChatSelected" class="nochat">
+      <!-- <div v-if="noChatSelected" class="nochat">
         <h1 class="mb-16">Hey, {{ store.getCurrentUser }}!</h1>
         <p>Choose anyone and start chatting</p>
-      </div>
+      </div> -->
       <RouterView></RouterView>
     </main>
   </div>
@@ -59,9 +60,6 @@ onMounted(() => {
 <style scoped>
 .activeChat {
   background: var(--darker-background);
-}
-.nochat {
-  text-align: center;
 }
 .container {
   display: grid;
