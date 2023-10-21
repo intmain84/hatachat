@@ -9,17 +9,14 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
       component: LoginView
     },
     {
       path: '/chatlist',
-      name: 'chatlist',
       component: ChatListView,
       children: [
         {
           path: ':chatId',
-          name: 'chatroom',
           component: ChatRoomView,
           props: true
         }
@@ -27,7 +24,6 @@ const router = createRouter({
     },
     {
       path: '/signup',
-      name: 'signup',
       component: SignUpView
     }
   ]

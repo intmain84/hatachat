@@ -1,5 +1,8 @@
 <script setup>
 import { toRefs } from 'vue'
+import { useChatStore } from '@/stores/chat'
+
+const store = useChatStore()
 
 const props = defineProps({
   chat: {
@@ -13,17 +16,21 @@ const { chat } = toRefs(props)
 
 <template>
   <li>
-    <a href="#" class="user-preview" :class="{ activeChat: chat.selected }">
+    <a href="#" class="user-preview">
       <img class="avatar" :src="chat.avatar" alt="" />
       <div class="text-data">
         <div class="message-info">
           <div class="nickname">{{ chat.nickname }}</div>
           <div class="message-info">
             <span v-if="chat.newMessages" class="new-messages">{{ chat.newMessages }}</span
-            ><span class="message-time">{{ chat.messageTime }}</span>
+            ><span class="message-time">{{ chat.lastMessage.createdAtTime }}</span>
           </div>
         </div>
-        <div class="message-preview">You: {{ chat.message }}</div>
+        <div v-if="chat.lastMessage.text" class="message-preview">
+          {{ chat.lastMessage.fromUser === store.currentUser ? 'You' : chat.nickname }}:
+          {{ chat.lastMessage.text }}
+        </div>
+        <div v-else class="message - preview">No messages</div>
       </div>
     </a>
   </li>
@@ -37,11 +44,9 @@ const { chat } = toRefs(props)
   padding: 16px;
   font-size: 0.75rem;
 }
-.chatlist .user-preview:hover,
-.activeChat {
+.chatlist .user-preview:hover {
   background: var(--darker-background);
 }
-
 .chatlist .user-preview .text-data {
   display: flex;
   flex-direction: column;

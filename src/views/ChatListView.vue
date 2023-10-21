@@ -3,21 +3,25 @@ import { UserCircleIcon } from '@heroicons/vue/24/outline'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import ChatPreview from '@/components/ChatPreview.vue'
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useChatStore } from '@/stores/chat'
-import { RouterView, useRouter } from 'vue-router'
+import { RouterView, useRouter, useRoute } from 'vue-router'
 
 const store = useChatStore()
 
 const router = useRouter()
+const route = useRoute()
 
 const noChatSelected = ref(true)
 
-const showRoom = async (userId) => {
+const showChatRoom = (chatId) => {
   noChatSelected.value = false
-  await store.getChatRoom(userId)
-  router.push({ name: 'chatroom', params: { chatId: userId } })
+  router.push(`/chatlist/${chatId}`)
 }
+
+onMounted(() => {
+  store.setChatPreviews()
+})
 </script>
 
 <template>
@@ -29,10 +33,11 @@ const showRoom = async (userId) => {
         </header> -->
         <ul>
           <ChatPreview
-            v-for="chat in store.getChatList"
+            v-for="chat in store.chatPreviews"
             :key="chat.id"
             :chat="chat"
-            @click="showRoom(chat.id)"
+            @click.stop="showChatRoom(chat.chatId)"
+            :class="{ activeChat: chat.chatId === route.params.chatId }"
           />
         </ul>
       </div>
@@ -52,6 +57,9 @@ const showRoom = async (userId) => {
 </template>
 
 <style scoped>
+.activeChat {
+  background: var(--darker-background);
+}
 .nochat {
   text-align: center;
 }

@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useChatStore = defineStore('chat', () => {
   const currentUser = ref()
+  const chatPreviews = ref([])
 
   const users = ref([
     {
@@ -15,51 +16,78 @@ export const useChatStore = defineStore('chat', () => {
     {
       id: '2',
       avatar: 'https://vuesax.com/avatars/avatar-3.png',
-      email: 'peter@gmail.com',
-      nickname: 'Petra',
+      email: 'sadie@gmail.com',
+      nickname: 'Sadie',
       password: 'pass2'
+    },
+    {
+      id: '3',
+      avatar: 'https://vuesax.com/avatars/avatar-7.png',
+      email: 'dutch@gmail.com',
+      nickname: 'Dutch',
+      password: 'pass3'
     }
   ])
 
   const chats = ref([
     {
-      id: 1,
+      chatId: '111',
       users: ['1', '2'],
+      lastMessage: {
+        text: "Apart From My Jakey, You're The Best Man I Know",
+        fromUser: '2',
+        createdAtDate: '12.09.2023',
+        createdAtTime: '20:05'
+      }
+    },
+    {
+      chatId: '222',
+      users: ['1', '3'],
       lastMessage: {
         text: null,
         fromUser: '2',
         createdAtDate: '12.09.2023',
-        createdAtTime: '20:05'
+        createdAtTime: '15:13'
+      }
+    },
+    {
+      chatId: '333',
+      users: ['2', '3'],
+      lastMessage: {
+        text: null,
+        fromUser: '2',
+        createdAtDate: '12.09.2023',
+        createdAtTime: '19:05'
       }
     }
   ])
 
   const messages = ref([
-    // {
-    //   id: 1,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '14:30',
-    //   toUser: 1,
-    //   fromUser: 2,
-    //   text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
-    // },
-    // {
-    //   id: 2,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '15:15',
-    //   toUser: 2,
-    //   fromUser: 3,
-    //   text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
-    // },
+    {
+      id: 1,
+      isRead: false,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '14:30',
+      chatId: '111',
+      fromUser: '1',
+      text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
+    },
+    {
+      id: 2,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '15:15',
+      chatId: '111',
+      fromUser: '2',
+      text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
+    }
     // {
     //   id: 3,
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '16:00',
-    //   toUser: 3,
-    //   fromUser: 1,
+    //   chatId: '3',
+    //   fromUser: '1',
     //   text: "Apologies, party isn't in the cards; family reunion takes precedence. We'll reconnect soon!"
     // },
     // {
@@ -67,8 +95,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '17:45',
-    //   toUser: 1,
-    //   fromUser: 3,
+    //   chatId: '1',
+    //   fromUser: '3',
     //   text: "I regret missing the party; family reunion conflict, but let's schedule a meetup!"
     // },
     // {
@@ -76,8 +104,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '18:20',
-    //   toUser: 2,
-    //   fromUser: 1,
+    //   chatId: '2',
+    //   fromUser: '1',
     //   text: "Count me out for the party, family reunion this weekend. Let's plan a get-together soon!"
     // },
     // {
@@ -85,8 +113,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '19:10',
-    //   toUser: 1,
-    //   fromUser: 3,
+    //   chatId: '1',
+    //   fromUser: '3',
     //   text: "Party's a miss due to family reunion commitments. We must catch up soon!"
     // },
     // {
@@ -94,8 +122,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '20:05',
-    //   toUser: 1,
-    //   fromUser: 2,
+    //   chatId: '1',
+    //   fromUser: '2',
     //   text: "I'm sorry, can't make it to the party. Family reunion this weekend, but let's meet up soon!"
     // },
     // {
@@ -103,8 +131,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '21:30',
-    //   toUser: 2,
-    //   fromUser: 3,
+    //   chatId: '2',
+    //   fromUser: '3',
     //   text: "Change of plans, can't attend the party; family reunion is the priority. Let's connect later!"
     // },
     // {
@@ -112,8 +140,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '22:15',
-    //   toUser: 3,
-    //   fromUser: 2,
+    //   chatId: '3',
+    //   fromUser: '2',
     //   text: "I won't be at the party; family reunion on the agenda, but we should plan a meetup soon!"
     // },
     // {
@@ -121,8 +149,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '23:00',
-    //   toUser: 1,
-    //   fromUser: 3,
+    //   chatId: '1',
+    //   fromUser: '3',
     //   text: "Party canceled due to family reunion. Let's reschedule for a later meet!"
     // },
     // {
@@ -130,8 +158,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '09:30',
-    //   toUser: 1,
-    //   fromUser: 2,
+    //   chatId: '1',
+    //   fromUser: '2',
     //   text: "Party's a miss; family reunion on the horizon, but we'll reconnect soon!"
     // },
     // {
@@ -139,8 +167,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '10:45',
-    //   toUser: 2,
-    //   fromUser: 3,
+    //   chatId: '2',
+    //   fromUser: '3',
     //   text: "Sorry, can't attend the party; family reunion event, but let's arrange a meetup soon!"
     // },
     // {
@@ -148,8 +176,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '11:15',
-    //   toUser: 1,
-    //   fromUser: 2,
+    //   chatId: '1',
+    //   fromUser: '2',
     //   text: "Regrets about the party; family reunion this weekend, but we'll reconnect soon!"
     // },
     // {
@@ -157,8 +185,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '13:00',
-    //   toUser: 2,
-    //   fromUser: 3,
+    //   chatId: '2',
+    //   fromUser: '3',
     //   text: "Unfortunately, I can't make it to the party; family reunion planned. Let's catch up later!"
     // },
     // {
@@ -166,8 +194,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '14:45',
-    //   toUser: 1,
-    //   fromUser: 2,
+    //   chatId: '1',
+    //   fromUser: '2',
     //   text: "Change of plans, I won't be at the party; family reunion is in the picture, but let's meet soon!"
     // },
     // {
@@ -175,8 +203,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '15:35',
-    //   toUser: 2,
-    //   fromUser: 1,
+    //   chatId: '2',
+    //   fromUser: '1',
     //   text: "Apologies, can't make it to the party; family reunion this weekend. Let's catch up later!"
     // },
     // {
@@ -184,8 +212,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '16:55',
-    //   toUser: 1,
-    //   fromUser: 2,
+    //   chatId: '1',
+    //   fromUser: '2',
     //   text: "Party plans disrupted by the family reunion; let's reschedule for another time!"
     // },
     // {
@@ -193,8 +221,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '17:25',
-    //   toUser: 1,
-    //   fromUser: 3,
+    //   chatId: '1',
+    //   fromUser: '3',
     //   text: "I won't attend the party; family reunion conflict, but we should meet up soon!"
     // },
     // {
@@ -202,8 +230,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '18:10',
-    //   toUser: 1,
-    //   fromUser: 2,
+    //   chatId: '1',
+    //   fromUser: '2',
     //   text: "Sorry, I won't make it to the party; family reunion plans, but let's connect soon!"
     // }
     // {
@@ -211,8 +239,8 @@ export const useChatStore = defineStore('chat', () => {
     //   isRead: true,
     //   createdAtDate: '12.09.2023',
     //   createdAtTime: '19:20',
-    //   toUser: 1,
-    //   fromUser: 3,
+    //   chatId: '1',
+    //   fromUser: '3',
     //   text: "Change of plans, can't attend the party; family reunion this weekend. Let's catch up later!"
     // }
   ])
@@ -223,30 +251,56 @@ export const useChatStore = defineStore('chat', () => {
     currentUser.value = currentUserId
   }
 
-  //Getters
-  //Получение списка всех юзеров приложения кроме тебя
-  const getChatList = computed(() => {
-    let noCurrentUserChatList = []
-    noCurrentUserChatList = users.value.filter((user) => user.id != currentUser.value)
-    return noCurrentUserChatList
-  })
+  //Генерация массива для отображения превью в списке слева
+  const setChatPreviews = () => {
+    let result = []
+    for (let i = 0; i < users.value.length; i++) {
+      for (let j = 0; j < chats.value.length; j++) {
+        if (
+          users.value[i].id !== currentUser.value &&
+          chats.value[j].users.includes(users.value[i].id) &&
+          chats.value[j].users.includes(currentUser.value)
+        ) {
+          result.push({
+            id: users.value[i].id,
+            avatar: users.value[i].avatar,
+            nickname: users.value[i].nickname,
+            chatId: chats.value[j].chatId,
+            lastMessage: {
+              text: chats.value[j].lastMessage.text,
+              fromUser: chats.value[j].lastMessage.fromUser,
+              createdAtDate: chats.value[j].lastMessage.createdAtDate,
+              createdAtTime: chats.value[j].lastMessage.createdAtTime
+            }
+          })
+        }
+      }
+    }
+    chatPreviews.value = result
+  }
 
+  //Getters
   //Получение твоего никнейма для отображения в приветственном окне
   const getCurrentUser = computed(() => {
     const currentUserData = users.value.find((user) => user.id == currentUser.value)
     return currentUserData.nickname
   })
 
-  // function increment() {
-  //   count.value++
-  // }
+  const getChatHeaderInfo = computed(() => {
+    return (chatId) => chatPreviews.value.find((chat) => chat.chatId === chatId)
+  })
 
   return {
+    //States
+    chatPreviews,
+    currentUser,
+
     //Getters
-    getChatList,
     getCurrentUser,
+    getChatHeaderInfo,
 
     //Actions
-    setCurrentUser
+    setCurrentUser,
+    setChatPreviews
   }
 })
