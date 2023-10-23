@@ -3,19 +3,33 @@ import MessageBubble from '@/components/MessageBubble.vue'
 import { FaceSmileIcon } from '@heroicons/vue/24/outline'
 import { PaperAirplaneIcon } from '@heroicons/vue/24/outline'
 
-import { ref } from 'vue'
+import { ref, onUpdated } from 'vue'
+import { useChatStore } from '../stores/chat'
 
-const isFieldActive = ref(false) // Чтобы поле соообщения подсвечивать когда на него нажимаешь
+const store = useChatStore()
+const props = defineProps(['chatId'])
+
+const isFieldActive = ref(false)
+let chatHeaderInfo = ref({})
+
+onUpdated(async () => {
+  try {
+    chatHeaderInfo.value = await store.getChatHeaderInfo(props.chatId)
+    console.log(chatHeaderInfo.value)
+  } catch (error) {
+    console.error('Error:', error)
+  }
+})
 </script>
 
 <template>
   <div class="chat-room">
     <header class="user-chat-header">
       <div class="user-preview">
-        <img class="avatar" src="https://vuesax.com/avatars/avatar-8.png" alt="" />
+        <img class="avatar" :src="chatHeaderInfo.avatar" />
         <div class="user-data">
-          <div class="nickname">Igor</div>
-          <div class="user-status">Online</div>
+          <div class="nickname">{{ chatHeaderInfo.nickname }}</div>
+          <div class="user-status">NoT PrOgrammed YeT</div>
         </div>
       </div>
     </header>

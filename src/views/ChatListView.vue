@@ -3,22 +3,25 @@ import { UserCircleIcon } from '@heroicons/vue/24/outline'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import ChatPreview from '@/components/ChatPreview.vue'
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useChatStore } from '@/stores/chat'
-import { RouterView, useRouter } from 'vue-router'
+import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
 
 const store = useChatStore()
 
 const router = useRouter()
+const route = useRoute()
 
 const noChatSelected = ref(true)
 
-const showRoom = async (userId) => {
+const showChatRoom = (chatId) => {
   noChatSelected.value = false
-  const selectedChatRoom = await store.getChatRoom(userId)
-  console.log(selectedChatRoom)
-  router.push({ name: 'chatroom', params: { chatId: userId } })
+  router.push({ name: 'chatroom', params: { chatId: chatId } })
 }
+
+onMounted(() => {
+  store.setChatPreviews()
+})
 </script>
 
 <template>
@@ -30,31 +33,33 @@ const showRoom = async (userId) => {
         </header> -->
         <ul>
           <ChatPreview
-            v-for="chat in store.getChatList"
+            v-for="chat in store.chatPreviews"
             :key="chat.id"
             :chat="chat"
-            @click="showRoom(chat.id)"
+            @click.stop="showChatRoom(chat.chatId)"
+            :class="{ activeChat: chat.chatId === route.params.chatId }"
           />
         </ul>
       </div>
       <footer class="sidebar-footer">
-        <a href="#"><UserCircleIcon class="icon24" /> My account</a>
+        <RouterLink to="myaccount">My account</RouterLink>
+        <!-- <a href="#"><UserCircleIcon class="icon24" /> My account</a> -->
         <a href="#"><ArrowRightOnRectangleIcon class="icon24" /> Logout</a>
       </footer>
     </aside>
     <main class="main">
-      <div v-if="noChatSelected" class="nochat">
+      <!-- <div v-if="noChatSelected" class="nochat">
         <h1 class="mb-16">Hey, {{ store.getCurrentUser }}!</h1>
         <p>Choose anyone and start chatting</p>
-      </div>
+      </div> -->
       <RouterView></RouterView>
     </main>
   </div>
 </template>
 
 <style scoped>
-.nochat {
-  text-align: center;
+.activeChat {
+  background: var(--darker-background);
 }
 .container {
   display: grid;
