@@ -1,10 +1,12 @@
-<script setup></script>
+<script setup>
+const props = defineProps(['nickname', 'text', 'time'])
+</script>
 
 <template>
   <div class="message-container">
-    <div class="nickname">Igor</div>
-    <div class="message">component</div>
-    <div class="time">12:34</div>
+    <div class="nickname">{{ props.nickname }}</div>
+    <div class="message">{{ props.text }}</div>
+    <div class="time">{{ props.time }}</div>
   </div>
 </template>
 
