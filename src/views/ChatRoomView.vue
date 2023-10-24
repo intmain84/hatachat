@@ -3,7 +3,7 @@ import MessageBubble from '@/components/MessageBubble.vue'
 import { FaceSmileIcon } from '@heroicons/vue/24/outline'
 import { PaperAirplaneIcon } from '@heroicons/vue/24/outline'
 
-import { ref, watch, onBeforeMount } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useChatStore } from '../stores/chat'
 import { useRoute } from 'vue-router'
 
@@ -80,8 +80,9 @@ const getCurrentDate = () => {
   )}`
 }
 
-onBeforeMount(async () => {
+onMounted(async () => {
   getCurrentDate()
+  console.log(chatHeaderInfo.value)
   //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
   if (props.chatId !== chatHeaderInfo.value.chatId) {
     //Если не совпадает то false и тянем новые данные
@@ -102,7 +103,7 @@ watch(
   () => route.params,
   async () => {
     getCurrentDate()
-    console.log('asd')
+    console.log(chatHeaderInfo.value)
     //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
     if (props.chatId !== chatHeaderInfo.value.chatId) {
       //Если не совпадает то false и тянем новые данные
