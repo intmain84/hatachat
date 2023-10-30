@@ -288,6 +288,14 @@ export const useChatStore = defineStore('chat', () => {
 
   const getChatHeaderInfo = computed(() => {
     return (chatId) => chatPreviews.value.find((chat) => chat.chatId === chatId)
+    return function (chatId) {
+      let array = []
+      for (let i = 0; i < chatPreviews.length; i++) {
+        if (chatPreviews[i].value.) {
+
+        }
+      }
+    }
   })
 
   return {

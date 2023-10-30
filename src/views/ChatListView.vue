@@ -3,7 +3,7 @@
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import ChatPreview from '@/components/ChatPreview.vue'
 
-import { ref, onMounted } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { useChatStore } from '@/stores/chat'
 import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
 
@@ -19,7 +19,7 @@ const showChatRoom = (chatId) => {
   router.push({ name: 'chatroom', params: { chatId: chatId } })
 }
 
-onMounted(() => {
+onBeforeMount(() => {
   store.setChatPreviews()
 })
 </script>

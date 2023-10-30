@@ -3,7 +3,7 @@ import MessageBubble from '@/components/MessageBubble.vue'
 import { FaceSmileIcon } from '@heroicons/vue/24/outline'
 import { PaperAirplaneIcon } from '@heroicons/vue/24/outline'
 
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onBeforeMount } from 'vue'
 import { useChatStore } from '../stores/chat'
 import { useRoute } from 'vue-router'
 
@@ -80,9 +80,9 @@ const getCurrentDate = () => {
   )}`
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   getCurrentDate()
-  console.log(chatHeaderInfo.value)
+  console.log(chatHeaderInfo.value.chatId)
   //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
   if (props.chatId !== chatHeaderInfo.value.chatId) {
     //Если не совпадает то false и тянем новые данные
@@ -91,7 +91,11 @@ onMounted(async () => {
 
   if (!hasFetchedChatHeader) {
     try {
+      console.log('yaaaaay')
+      console.log(props.chatId)
       chatHeaderInfo.value = await store.getChatHeaderInfo(props.chatId)
+
+      console.log(chatHeaderInfo.value)
       hasFetchedChatHeader = true //После ставим в true
     } catch (error) {
       console.error('Error:', error)
@@ -99,27 +103,26 @@ onMounted(async () => {
   }
 })
 
-watch(
-  () => route.params,
-  async () => {
-    getCurrentDate()
-    console.log(chatHeaderInfo.value)
-    //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
-    if (props.chatId !== chatHeaderInfo.value.chatId) {
-      //Если не совпадает то false и тянем новые данные
-      hasFetchedChatHeader = false
-    }
+// watch(
+//   () => route.params,
+//   async () => {
+//     getCurrentDate()
+//     //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
+//     if (props.chatId !== chatHeaderInfo.value.chatId) {
+//       //Если не совпадает то false и тянем новые данные
+//       hasFetchedChatHeader = false
+//     }
 
-    if (!hasFetchedChatHeader) {
-      try {
-        chatHeaderInfo.value = await store.getChatHeaderInfo(props.chatId)
-        hasFetchedChatHeader = true //После ставим в true
-      } catch (error) {
-        console.error('Error:', error)
-      }
-    }
-  }
-)
+//     if (!hasFetchedChatHeader) {
+//       try {
+//         chatHeaderInfo.value = await store.getChatHeaderInfo(props.chatId)
+//         hasFetchedChatHeader = true //После ставим в true
+//       } catch (error) {
+//         console.error('Error:', error)
+//       }
+//     }
+//   }
+// )
 </script>
 
 <template>
