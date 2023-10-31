@@ -11,57 +11,6 @@ const store = useChatStore()
 const route = useRoute()
 const props = defineProps(['chatId'])
 
-const msgGroups = ref([
-  {
-    id: '1',
-    date: '21.12.2015',
-    messages: [
-      {
-        id: 1,
-        isRead: false,
-        createdAtDate: '12.09.2023',
-        createdAtTime: '14:30',
-        chatId: '111',
-        fromUser: '1',
-        text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
-      },
-      {
-        id: 2,
-        isRead: true,
-        createdAtDate: '12.09.2023',
-        createdAtTime: '15:15',
-        chatId: '111',
-        fromUser: '2',
-        text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
-      }
-    ]
-  },
-  {
-    id: '2',
-    date: '23.10.2023',
-    messages: [
-      {
-        id: 1,
-        isRead: false,
-        createdAtDate: '12.09.2023',
-        createdAtTime: '14:30',
-        chatId: '111',
-        fromUser: '1',
-        text: "I can't make it to the party. Catch up soon!"
-      },
-      {
-        id: 2,
-        isRead: true,
-        createdAtDate: '12.09.2023',
-        createdAtTime: '15:15',
-        chatId: '111',
-        fromUser: '2',
-        text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
-      }
-    ]
-  }
-])
-
 const isFieldActive = ref(false)
 let chatHeaderInfo = ref({})
 let hasFetchedChatHeader = false
@@ -97,8 +46,6 @@ onBeforeMount(async () => {
       console.error('Error:', error)
     }
   }
-
-  await store.setMsgGroups(props.chatId)
 })
 
 watch(
@@ -119,6 +66,7 @@ watch(
         console.error('Error:', error)
       }
     }
+    store.setMsgGroups(props.chatId)
   }
 )
 </script>
@@ -138,8 +86,8 @@ watch(
     <div class="messages-container">
       <div
         class="messages-group"
-        v-for="msgGroup in msgGroups.slice().reverse()"
-        :key="msgGroup.id"
+        v-for="msgGroup in store.msgGroups.slice().reverse()"
+        :key="msgGroup"
       >
         <div class="messages-date">
           {{ msgGroup.date === currentDate ? 'Today' : msgGroup.date }}

@@ -65,7 +65,7 @@ export const useChatStore = defineStore('chat', () => {
 
   const messages = ref([
     {
-      id: 1,
+      id: '1',
       isRead: false,
       createdAtDate: '12.09.2023',
       createdAtTime: '14:30',
@@ -74,7 +74,7 @@ export const useChatStore = defineStore('chat', () => {
       text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
     },
     {
-      id: 2,
+      id: '2',
       isRead: true,
       createdAtDate: '12.09.2023',
       createdAtTime: '15:15',
@@ -83,7 +83,7 @@ export const useChatStore = defineStore('chat', () => {
       text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
     },
     {
-      id: 3,
+      id: '3',
       isRead: true,
       createdAtDate: '12.09.2023',
       createdAtTime: '16:00',
@@ -92,13 +92,40 @@ export const useChatStore = defineStore('chat', () => {
       text: "Apologies, party isn't in the cards; family reunion takes precedence. We'll reconnect soon!"
     },
     {
-      id: 4,
+      id: '4',
       isRead: true,
       createdAtDate: '13.09.2023',
       createdAtTime: '17:45',
       chatId: '111',
       fromUser: '1',
       text: "I regret missing the party; family reunion conflict, but let's schedule a meetup!"
+    },
+    {
+      id: '5',
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '15:15',
+      chatId: '222',
+      fromUser: '1',
+      text: " is a no-go. Family reunion plans, but we'll meet soon!"
+    },
+    {
+      id: '6',
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '16:00',
+      chatId: '222',
+      fromUser: '3',
+      text: "Apologies, party isn't nect soon!"
+    },
+    {
+      id: '7',
+      isRead: true,
+      createdAtDate: '13.09.2023',
+      createdAtTime: '17:45',
+      chatId: '222',
+      fromUser: '1',
+      text: 'I edule a meetup!'
     }
     // {
     //   id: 5,
@@ -283,68 +310,35 @@ export const useChatStore = defineStore('chat', () => {
   //Генерация массива сообщений для выбранного чата
   const setMsgGroups = (chatId) => {
     let result = []
-    //let activeChat = chats.value.find((chat) => chat.chatId === chatId)
-    //let chatUsers = activeChat.users
+
     let activeChatMessages = messages.value.filter((message) => message.chatId === chatId)
-    for (let i = 0; i < activeChatMessages.length; i++) {
-      if (result.length === 0) {
+
+    // activeChatMessages.forEach((message) => {
+    //   if (result[message.createdAtDate]) {
+    //     result[message.createdAtDate].push(message)
+    //   } else {
+    //     result[message.createdAtDate] = [message]
+    //   }
+    // })
+
+    activeChatMessages.forEach((message) => {
+      const date = message.createdAtDate
+
+      const existingEntry = result.find((entry) => entry.date === date)
+
+      if (existingEntry) {
+        existingEntry.messages.push(message)
+      } else {
         result.push({
-          date: activeChatMessages[i].createdAtDate,
-          messages: []
+          date: date,
+          messages: [message]
         })
       }
-      for (let j = 0; j < result.length; j++) {
-        if (result[j].date === activeChatMessages[i].createdAtDate) {
-          result[j].messages.push({
-            id: activeChatMessages[i].id,
-            isRead: activeChatMessages[i].isRead,
-            createdAtTime: activeChatMessages[i].createdAtTime,
-            fromUser: activeChatMessages[i].fromUser,
-            text: activeChatMessages[i].text
-          })
-        } else {
-          result.push({
-            date: activeChatMessages[i].createdAtDate,
-            messages: [
-              {
-                id: activeChatMessages[i].id,
-                isRead: activeChatMessages[i].isRead,
-                createdAtTime: activeChatMessages[i].createdAtTime,
-                fromUser: activeChatMessages[i].fromUser,
-                text: activeChatMessages[i].text
-              }
-            ]
-          })
-        }
-      }
-    }
+    })
 
-    console.log('result', result)
+    console.log(result)
 
-    // {
-    //     id: '1',
-    //     date: '21.12.2015',
-    //     messages: [
-    //       {
-    //         id: 1,
-    //         isRead: false,
-    //         createdAtDate: '12.09.2023',
-    //         createdAtTime: '14:30',
-    //         chatId: '111',
-    //         fromUser: '1',
-    //         text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
-    //       },
-    //       {
-    //         id: 2,
-    //         isRead: true,
-    //         createdAtDate: '12.09.2023',
-    //         createdAtTime: '15:15',
-    //         chatId: '111',
-    //         fromUser: '2',
-    //         text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
-    //       }
-    //     ]
-    //   }
+    msgGroups.value = result
   }
 
   //Getters
@@ -362,6 +356,7 @@ export const useChatStore = defineStore('chat', () => {
     //States
     chatPreviews,
     currentUser,
+    msgGroups,
 
     //Getters
     getCurrentUser,
