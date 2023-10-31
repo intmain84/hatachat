@@ -7,7 +7,7 @@ import MyAccountView from '../views/MyAccountView.vue'
 import NoChatSelectedView from '../views/NoChatSelectedView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',

@@ -82,7 +82,6 @@ const getCurrentDate = () => {
 
 onBeforeMount(async () => {
   getCurrentDate()
-  console.log(chatHeaderInfo.value.chatId)
   //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
   if (props.chatId !== chatHeaderInfo.value.chatId) {
     //Если не совпадает то false и тянем новые данные
@@ -91,38 +90,37 @@ onBeforeMount(async () => {
 
   if (!hasFetchedChatHeader) {
     try {
-      console.log('yaaaaay')
-      console.log(props.chatId)
       chatHeaderInfo.value = await store.getChatHeaderInfo(props.chatId)
 
-      console.log(chatHeaderInfo.value)
       hasFetchedChatHeader = true //После ставим в true
     } catch (error) {
       console.error('Error:', error)
     }
   }
+
+  await store.setMsgGroups(props.chatId)
 })
 
-// watch(
-//   () => route.params,
-//   async () => {
-//     getCurrentDate()
-//     //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
-//     if (props.chatId !== chatHeaderInfo.value.chatId) {
-//       //Если не совпадает то false и тянем новые данные
-//       hasFetchedChatHeader = false
-//     }
+watch(
+  () => route.params,
+  async () => {
+    getCurrentDate()
+    //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
+    if (props.chatId !== chatHeaderInfo.value.chatId) {
+      //Если не совпадает то false и тянем новые данные
+      hasFetchedChatHeader = false
+    }
 
-//     if (!hasFetchedChatHeader) {
-//       try {
-//         chatHeaderInfo.value = await store.getChatHeaderInfo(props.chatId)
-//         hasFetchedChatHeader = true //После ставим в true
-//       } catch (error) {
-//         console.error('Error:', error)
-//       }
-//     }
-//   }
-// )
+    if (!hasFetchedChatHeader) {
+      try {
+        chatHeaderInfo.value = await store.getChatHeaderInfo(props.chatId)
+        hasFetchedChatHeader = true //После ставим в true
+      } catch (error) {
+        console.error('Error:', error)
+      }
+    }
+  }
+)
 </script>
 
 <template>

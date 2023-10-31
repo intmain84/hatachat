@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 export const useChatStore = defineStore('chat', () => {
   const currentUser = ref()
   const chatPreviews = ref([])
+  const msgGroups = ref([])
 
   const users = ref([
     {
@@ -80,25 +81,25 @@ export const useChatStore = defineStore('chat', () => {
       chatId: '111',
       fromUser: '2',
       text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
+    },
+    {
+      id: 3,
+      isRead: true,
+      createdAtDate: '12.09.2023',
+      createdAtTime: '16:00',
+      chatId: '111',
+      fromUser: '2',
+      text: "Apologies, party isn't in the cards; family reunion takes precedence. We'll reconnect soon!"
+    },
+    {
+      id: 4,
+      isRead: true,
+      createdAtDate: '13.09.2023',
+      createdAtTime: '17:45',
+      chatId: '111',
+      fromUser: '1',
+      text: "I regret missing the party; family reunion conflict, but let's schedule a meetup!"
     }
-    // {
-    //   id: 3,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '16:00',
-    //   chatId: '3',
-    //   fromUser: '1',
-    //   text: "Apologies, party isn't in the cards; family reunion takes precedence. We'll reconnect soon!"
-    // },
-    // {
-    //   id: 4,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '17:45',
-    //   chatId: '1',
-    //   fromUser: '3',
-    //   text: "I regret missing the party; family reunion conflict, but let's schedule a meetup!"
-    // },
     // {
     //   id: 5,
     //   isRead: true,
@@ -279,6 +280,73 @@ export const useChatStore = defineStore('chat', () => {
     chatPreviews.value = result
   }
 
+  //Генерация массива сообщений для выбранного чата
+  const setMsgGroups = (chatId) => {
+    let result = []
+    //let activeChat = chats.value.find((chat) => chat.chatId === chatId)
+    //let chatUsers = activeChat.users
+    let activeChatMessages = messages.value.filter((message) => message.chatId === chatId)
+    for (let i = 0; i < activeChatMessages.length; i++) {
+      if (result.length === 0) {
+        result.push({
+          date: activeChatMessages[i].createdAtDate,
+          messages: []
+        })
+      }
+      for (let j = 0; j < result.length; j++) {
+        if (result[j].date === activeChatMessages[i].createdAtDate) {
+          result[j].messages.push({
+            id: activeChatMessages[i].id,
+            isRead: activeChatMessages[i].isRead,
+            createdAtTime: activeChatMessages[i].createdAtTime,
+            fromUser: activeChatMessages[i].fromUser,
+            text: activeChatMessages[i].text
+          })
+        } else {
+          result.push({
+            date: activeChatMessages[i].createdAtDate,
+            messages: [
+              {
+                id: activeChatMessages[i].id,
+                isRead: activeChatMessages[i].isRead,
+                createdAtTime: activeChatMessages[i].createdAtTime,
+                fromUser: activeChatMessages[i].fromUser,
+                text: activeChatMessages[i].text
+              }
+            ]
+          })
+        }
+      }
+    }
+
+    console.log('result', result)
+
+    // {
+    //     id: '1',
+    //     date: '21.12.2015',
+    //     messages: [
+    //       {
+    //         id: 1,
+    //         isRead: false,
+    //         createdAtDate: '12.09.2023',
+    //         createdAtTime: '14:30',
+    //         chatId: '111',
+    //         fromUser: '1',
+    //         text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
+    //       },
+    //       {
+    //         id: 2,
+    //         isRead: true,
+    //         createdAtDate: '12.09.2023',
+    //         createdAtTime: '15:15',
+    //         chatId: '111',
+    //         fromUser: '2',
+    //         text: "Unfortunately, party attendance is a no-go. Family reunion plans, but we'll meet soon!"
+    //       }
+    //     ]
+    //   }
+  }
+
   //Getters
   //Получение твоего никнейма для отображения в приветственном окне
   const getCurrentUser = computed(() => {
@@ -288,14 +356,6 @@ export const useChatStore = defineStore('chat', () => {
 
   const getChatHeaderInfo = computed(() => {
     return (chatId) => chatPreviews.value.find((chat) => chat.chatId === chatId)
-    return function (chatId) {
-      let array = []
-      for (let i = 0; i < chatPreviews.length; i++) {
-        if (chatPreviews[i].value.) {
-
-        }
-      }
-    }
   })
 
   return {
@@ -309,6 +369,7 @@ export const useChatStore = defineStore('chat', () => {
 
     //Actions
     setCurrentUser,
-    setChatPreviews
+    setChatPreviews,
+    setMsgGroups
   }
 })
