@@ -37,7 +37,7 @@ export const useChatStore = defineStore('chat', () => {
       lastMessage: {
         text: "Apart From My Jakey, You're The Best Man I Know",
         fromUser: '2',
-        createdAtDate: '12.09.2023',
+        createdAtDate: '01.09.2023',
         createdAtTime: '20:05'
       }
     },
@@ -67,7 +67,7 @@ export const useChatStore = defineStore('chat', () => {
     {
       id: '1',
       isRead: false,
-      createdAtDate: '12.09.2023',
+      createdAtDate: '01.11.2023',
       createdAtTime: '14:30',
       chatId: '111',
       fromUser: '1',
@@ -127,150 +127,6 @@ export const useChatStore = defineStore('chat', () => {
       fromUser: '1',
       text: 'I edule a meetup!'
     }
-    // {
-    //   id: 5,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '18:20',
-    //   chatId: '2',
-    //   fromUser: '1',
-    //   text: "Count me out for the party, family reunion this weekend. Let's plan a get-together soon!"
-    // },
-    // {
-    //   id: 6,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '19:10',
-    //   chatId: '1',
-    //   fromUser: '3',
-    //   text: "Party's a miss due to family reunion commitments. We must catch up soon!"
-    // },
-    // {
-    //   id: 7,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '20:05',
-    //   chatId: '1',
-    //   fromUser: '2',
-    //   text: "I'm sorry, can't make it to the party. Family reunion this weekend, but let's meet up soon!"
-    // },
-    // {
-    //   id: 8,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '21:30',
-    //   chatId: '2',
-    //   fromUser: '3',
-    //   text: "Change of plans, can't attend the party; family reunion is the priority. Let's connect later!"
-    // },
-    // {
-    //   id: 9,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '22:15',
-    //   chatId: '3',
-    //   fromUser: '2',
-    //   text: "I won't be at the party; family reunion on the agenda, but we should plan a meetup soon!"
-    // },
-    // {
-    //   id: 10,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '23:00',
-    //   chatId: '1',
-    //   fromUser: '3',
-    //   text: "Party canceled due to family reunion. Let's reschedule for a later meet!"
-    // },
-    // {
-    //   id: 11,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '09:30',
-    //   chatId: '1',
-    //   fromUser: '2',
-    //   text: "Party's a miss; family reunion on the horizon, but we'll reconnect soon!"
-    // },
-    // {
-    //   id: 12,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '10:45',
-    //   chatId: '2',
-    //   fromUser: '3',
-    //   text: "Sorry, can't attend the party; family reunion event, but let's arrange a meetup soon!"
-    // },
-    // {
-    //   id: 13,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '11:15',
-    //   chatId: '1',
-    //   fromUser: '2',
-    //   text: "Regrets about the party; family reunion this weekend, but we'll reconnect soon!"
-    // },
-    // {
-    //   id: 14,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '13:00',
-    //   chatId: '2',
-    //   fromUser: '3',
-    //   text: "Unfortunately, I can't make it to the party; family reunion planned. Let's catch up later!"
-    // },
-    // {
-    //   id: 15,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '14:45',
-    //   chatId: '1',
-    //   fromUser: '2',
-    //   text: "Change of plans, I won't be at the party; family reunion is in the picture, but let's meet soon!"
-    // },
-    // {
-    //   id: 16,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '15:35',
-    //   chatId: '2',
-    //   fromUser: '1',
-    //   text: "Apologies, can't make it to the party; family reunion this weekend. Let's catch up later!"
-    // },
-    // {
-    //   id: 17,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '16:55',
-    //   chatId: '1',
-    //   fromUser: '2',
-    //   text: "Party plans disrupted by the family reunion; let's reschedule for another time!"
-    // },
-    // {
-    //   id: 18,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '17:25',
-    //   chatId: '1',
-    //   fromUser: '3',
-    //   text: "I won't attend the party; family reunion conflict, but we should meet up soon!"
-    // },
-    // {
-    //   id: 19,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '18:10',
-    //   chatId: '1',
-    //   fromUser: '2',
-    //   text: "Sorry, I won't make it to the party; family reunion plans, but let's connect soon!"
-    // }
-    // {
-    //   id: 20,
-    //   isRead: true,
-    //   createdAtDate: '12.09.2023',
-    //   createdAtTime: '19:20',
-    //   chatId: '1',
-    //   fromUser: '3',
-    //   text: "Change of plans, can't attend the party; family reunion this weekend. Let's catch up later!"
-    // }
   ])
 
   //Actions
@@ -309,7 +165,7 @@ export const useChatStore = defineStore('chat', () => {
 
   //Генерация массива сообщений для выбранного чата
   const setMsgGroups = (chatId) => {
-    let result = []
+    let result = {}
 
     let activeChatMessages = messages.value.filter((message) => message.chatId === chatId)
 
@@ -320,24 +176,6 @@ export const useChatStore = defineStore('chat', () => {
         result[message.createdAtDate] = [message]
       }
     })
-
-    // activeChatMessages.forEach((message) => {
-    //   const date = message.createdAtDate
-
-    //   const existingEntry = result.find((entry) => entry.date === date)
-
-    //   if (existingEntry) {
-    //     existingEntry.messages.push(message)
-    //   } else {
-    //     result.push({
-    //       date: date,
-    //       messages: [message]
-    //     })
-    //   }
-    // })
-
-    console.log(result)
-
     msgGroups.value = result
   }
 

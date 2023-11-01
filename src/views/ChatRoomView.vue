@@ -23,10 +23,10 @@ const getCurrentDate = () => {
   const currentDay = initial.getDate() + ''
   const currentMonth = initial.getMonth() + 1 + ''
   const currentYear = initial.getFullYear() + ''
-  currentDate.value = `${currentDay}.${currentMonth.padStart(2, '0')}.${currentYear.padStart(
+  currentDate.value = `${currentDay.padStart(2, '0')}.${currentMonth.padStart(
     2,
     '0'
-  )}`
+  )}.${currentYear.padStart(2, '0')}`
 }
 
 onBeforeMount(async () => {
@@ -45,6 +45,12 @@ onBeforeMount(async () => {
     } catch (error) {
       console.error('Error:', error)
     }
+  }
+
+  try {
+    await store.setMsgGroups(props.chatId)
+  } catch (error) {
+    console.error('Error:', error)
   }
 })
 
@@ -66,7 +72,12 @@ watch(
         console.error('Error:', error)
       }
     }
-    store.setMsgGroups(props.chatId)
+
+    try {
+      await store.setMsgGroups(props.chatId)
+    } catch (error) {
+      console.error('Error:', error)
+    }
   }
 )
 </script>
@@ -84,21 +95,16 @@ watch(
     </header>
 
     <div class="messages-container">
-      <div
-        class="messages-group"
-        v-for="msgGroup in store.msgGroups.slice().reverse()"
-        :key="msgGroup"
-      >
+      <div class="messages-group" v-for="(msgGroup, key, index) in store.msgGroups" :key="index">
         <div class="messages-date">
-          {{ msgGroup.date === currentDate ? 'Today' : msgGroup.date }}
+          {{ key == currentDate ? 'Today' : key }}
         </div>
         <MessageBubble
-          v-for="msgBubble in msgGroup.messages"
-          :key="msgBubble.id"
-          :class="[msgBubble.fromUser !== store.currentUser ? 'message-left' : 'message-right']"
-          nickname="Vasia"
-          :text="msgBubble.text"
-          :time="msgBubble.createdAtTime"
+          v-for="msg in msgGroup"
+          :key="msg.id"
+          :text="msg.text"
+          :time="msg.createdAtTime"
+          :class="[msg.fromUser === store.currentUser ? 'message-right' : 'message-left']"
         />
       </div>
     </div>
