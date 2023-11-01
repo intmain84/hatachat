@@ -313,28 +313,28 @@ export const useChatStore = defineStore('chat', () => {
 
     let activeChatMessages = messages.value.filter((message) => message.chatId === chatId)
 
-    // activeChatMessages.forEach((message) => {
-    //   if (result[message.createdAtDate]) {
-    //     result[message.createdAtDate].push(message)
-    //   } else {
-    //     result[message.createdAtDate] = [message]
-    //   }
-    // })
-
     activeChatMessages.forEach((message) => {
-      const date = message.createdAtDate
-
-      const existingEntry = result.find((entry) => entry.date === date)
-
-      if (existingEntry) {
-        existingEntry.messages.push(message)
+      if (result[message.createdAtDate]) {
+        result[message.createdAtDate].push(message)
       } else {
-        result.push({
-          date: date,
-          messages: [message]
-        })
+        result[message.createdAtDate] = [message]
       }
     })
+
+    // activeChatMessages.forEach((message) => {
+    //   const date = message.createdAtDate
+
+    //   const existingEntry = result.find((entry) => entry.date === date)
+
+    //   if (existingEntry) {
+    //     existingEntry.messages.push(message)
+    //   } else {
+    //     result.push({
+    //       date: date,
+    //       messages: [message]
+    //     })
+    //   }
+    // })
 
     console.log(result)
 
