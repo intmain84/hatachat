@@ -1,12 +1,13 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import { useChatStore } from './stores/chat'
-import { onMounted } from 'vue'
+import { onBeforeMount } from 'vue'
+import { initializeApp } from 'firebase/app'
 
 const store = useChatStore()
 
-onMounted(() => {
-  const currentUserId = '1'
+onBeforeMount(() => {
+  const currentUserId = '6SIiVN9PYroTfF1uoT4V'
   store.setCurrentUser(currentUserId)
 })
 </script>
