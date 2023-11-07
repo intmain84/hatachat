@@ -9,7 +9,7 @@ const props = defineProps({
     type: Object,
     required: true
   }
-})
+}) //chat приходит из ChatListView.vue
 
 const { chat } = toRefs(props)
 </script>

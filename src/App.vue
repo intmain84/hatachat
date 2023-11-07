@@ -2,7 +2,6 @@
 import { RouterView } from 'vue-router'
 import { useChatStore } from './stores/chat'
 import { onBeforeMount } from 'vue'
-import { initializeApp } from 'firebase/app'
 
 const store = useChatStore()
 

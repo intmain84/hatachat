@@ -1,14 +1,18 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { db } from '../firebase'
+import { collection, getDocs } from 'firebase/firestore/lite'
 
 export const useChatStore = defineStore('chat', () => {
   const currentUser = ref()
   const chatPreviews = ref([])
   const msgGroups = ref([])
 
+  const
+
   const users = ref([
     {
-      id: '1',
+      id: '6SIiVN9PYroTfF1uoT4V',
       avatar: 'https://vuesax.com/avatars/avatar-9.png',
       email: 'vuesax@gmail.com',
       nickname: 'Arthur',
@@ -33,7 +37,7 @@ export const useChatStore = defineStore('chat', () => {
   const chats = ref([
     {
       chatId: '111',
-      users: ['1', '2'],
+      users: ['6SIiVN9PYroTfF1uoT4V', '2'],
       lastMessage: {
         text: "Apart From My Jakey, You're The Best Man I Know",
         fromUser: '2',
@@ -43,7 +47,7 @@ export const useChatStore = defineStore('chat', () => {
     },
     {
       chatId: '222',
-      users: ['1', '3'],
+      users: ['6SIiVN9PYroTfF1uoT4V', '3'],
       lastMessage: {
         text: null,
         fromUser: '2',
@@ -65,12 +69,12 @@ export const useChatStore = defineStore('chat', () => {
 
   const messages = ref([
     {
-      id: '1',
+      id: '6SIiVN9PYroTfF1uoT4V',
       isRead: false,
       createdAtDate: '01.11.2023',
       createdAtTime: '14:30',
       chatId: '111',
-      fromUser: '1',
+      fromUser: '6SIiVN9PYroTfF1uoT4V',
       text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
     },
     {
@@ -97,7 +101,7 @@ export const useChatStore = defineStore('chat', () => {
       createdAtDate: '13.09.2023',
       createdAtTime: '17:45',
       chatId: '111',
-      fromUser: '1',
+      fromUser: '6SIiVN9PYroTfF1uoT4V',
       text: "I regret missing the party; family reunion conflict, but let's schedule a meetup!"
     },
     {
@@ -106,7 +110,7 @@ export const useChatStore = defineStore('chat', () => {
       createdAtDate: '12.09.2023',
       createdAtTime: '15:15',
       chatId: '222',
-      fromUser: '1',
+      fromUser: '6SIiVN9PYroTfF1uoT4V',
       text: " is a no-go. Family reunion plans, but we'll meet soon!"
     },
     {
@@ -124,7 +128,7 @@ export const useChatStore = defineStore('chat', () => {
       createdAtDate: '13.09.2023',
       createdAtTime: '17:45',
       chatId: '222',
-      fromUser: '1',
+      fromUser: '6SIiVN9PYroTfF1uoT4V',
       text: 'I edule a meetup!'
     }
   ])
