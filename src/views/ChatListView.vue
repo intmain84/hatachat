@@ -19,8 +19,8 @@ const showChatRoom = (chatId) => {
   router.push({ name: 'chatroom', params: { chatId: chatId } })
 }
 
-onBeforeMount(() => {
-  store.setChatPreviews()
+onBeforeMount(async () => {
+  await store.setChatPreviews()
 })
 </script>
 
@@ -48,10 +48,6 @@ onBeforeMount(() => {
       </footer>
     </aside>
     <main class="main">
-      <!-- <div v-if="noChatSelected" class="nochat">
-        <h1 class="mb-16">Hey, {{ store.getCurrentUser }}!</h1>
-        <p>Choose anyone and start chatting</p>
-      </div> -->
       <RouterView></RouterView>
     </main>
   </div>

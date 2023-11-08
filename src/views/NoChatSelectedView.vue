@@ -5,7 +5,7 @@ const store = useChatStore()
 
 <template>
   <div class="nochat">
-    <h1 class="mb-16">Hey, {{ store.getCurrentUser }}!</h1>
+    <!-- <h1 class="mb-16">Hey, {{ store.getCurrentUser }}!</h1> -->
     <p>Choose anyone and start chatting</p>
   </div>
 </template>

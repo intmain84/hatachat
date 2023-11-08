@@ -1,16 +1,18 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { collection, getDocs } from 'firebase/firestore/lite'
+import { collection, getDocs } from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const currentUser = ref()
   const chatPreviews = ref([])
   const msgGroups = ref([])
 
-  const
+  const users = ref([])
+  const chats2 = ref([])
+  const messages2 = ref([])
 
-  const users = ref([
+  const users2 = ref([
     {
       id: '6SIiVN9PYroTfF1uoT4V',
       avatar: 'https://vuesax.com/avatars/avatar-9.png',
@@ -140,8 +142,15 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   //Генерация массива для отображения превью в списке слева
-  const setChatPreviews = () => {
+  const setChatPreviews = async () => {
+    console.log(db)
+    const querySnapshot = await getDocs(collection(db, 'users'))
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, ' => ', doc.data())
+    })
     let result = []
+
     for (let i = 0; i < users.value.length; i++) {
       for (let j = 0; j < chats.value.length; j++) {
         if (

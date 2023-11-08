@@ -31,7 +31,7 @@ const router = createRouter({
           props: true
         },
         {
-          path: 'myaccount',
+          path: '/myaccount',
           name: 'myaccount',
           component: MyAccountView,
           props: true
