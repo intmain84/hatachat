@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const currentUser = ref()
@@ -12,57 +12,57 @@ export const useChatStore = defineStore('chat', () => {
   const chats2 = ref([])
   const messages2 = ref([])
 
-  const users2 = ref([
-    {
-      id: '6SIiVN9PYroTfF1uoT4V',
-      avatar: 'https://vuesax.com/avatars/avatar-9.png',
-      email: 'vuesax@gmail.com',
-      nickname: 'Arthur',
-      password: 'pass1'
-    },
-    {
-      id: '2',
-      avatar: 'https://vuesax.com/avatars/avatar-3.png',
-      email: 'sadie@gmail.com',
-      nickname: 'Sadie',
-      password: 'pass2'
-    },
-    {
-      id: '3',
-      avatar: 'https://vuesax.com/avatars/avatar-7.png',
-      email: 'dutch@gmail.com',
-      nickname: 'Dutch',
-      password: 'pass3'
-    }
-  ])
+  // const users2 = ref([
+  //   {
+  //     id: '6SIiVN9PYroTfF1uoT4V',
+  //     avatar: 'https://vuesax.com/avatars/avatar-9.png',
+  //     email: 'vuesax@gmail.com',
+  //     nickname: 'Arthur',
+  //     password: 'pass1'
+  //   },
+  //   {
+  //     id: '2',
+  //     avatar: 'https://vuesax.com/avatars/avatar-3.png',
+  //     email: 'sadie@gmail.com',
+  //     nickname: 'Sadie',
+  //     password: 'pass2'
+  //   },
+  //   {
+  //     id: '3',
+  //     avatar: 'https://vuesax.com/avatars/avatar-7.png',
+  //     email: 'dutch@gmail.com',
+  //     nickname: 'Dutch',
+  //     password: 'pass3'
+  //   }
+  // ])
 
   const chats = ref([
     {
       chatId: '111',
-      users: ['6SIiVN9PYroTfF1uoT4V', '2'],
+      users: ['mxQ5P8SC6ucwFmlh7uBJ', 'y4n5AfmVfC5zwt1xTVY4'],
       lastMessage: {
         text: "Apart From My Jakey, You're The Best Man I Know",
-        fromUser: '2',
+        fromUser: 'y4n5AfmVfC5zwt1xTVY4',
         createdAtDate: '01.09.2023',
         createdAtTime: '20:05'
       }
     },
     {
       chatId: '222',
-      users: ['6SIiVN9PYroTfF1uoT4V', '3'],
+      users: ['mxQ5P8SC6ucwFmlh7uBJ', '6SIiVN9PYroTfF1uoT4V'],
       lastMessage: {
         text: null,
-        fromUser: '2',
+        fromUser: 'y4n5AfmVfC5zwt1xTVY4',
         createdAtDate: '12.09.2023',
         createdAtTime: '15:13'
       }
     },
     {
       chatId: '333',
-      users: ['2', '3'],
+      users: ['y4n5AfmVfC5zwt1xTVY4', '6SIiVN9PYroTfF1uoT4V'],
       lastMessage: {
         text: null,
-        fromUser: '2',
+        fromUser: 'y4n5AfmVfC5zwt1xTVY4',
         createdAtDate: '12.09.2023',
         createdAtTime: '19:05'
       }
@@ -71,12 +71,12 @@ export const useChatStore = defineStore('chat', () => {
 
   const messages = ref([
     {
-      id: '6SIiVN9PYroTfF1uoT4V',
+      id: '1',
       isRead: false,
       createdAtDate: '01.11.2023',
       createdAtTime: '14:30',
       chatId: '111',
-      fromUser: '6SIiVN9PYroTfF1uoT4V',
+      fromUser: 'mxQ5P8SC6ucwFmlh7uBJ',
       text: "Excited about the weekend, but I can't make it to the party. Catch up soon!"
     },
     {
@@ -103,7 +103,7 @@ export const useChatStore = defineStore('chat', () => {
       createdAtDate: '13.09.2023',
       createdAtTime: '17:45',
       chatId: '111',
-      fromUser: '6SIiVN9PYroTfF1uoT4V',
+      fromUser: 'mxQ5P8SC6ucwFmlh7uBJ',
       text: "I regret missing the party; family reunion conflict, but let's schedule a meetup!"
     },
     {
@@ -112,7 +112,7 @@ export const useChatStore = defineStore('chat', () => {
       createdAtDate: '12.09.2023',
       createdAtTime: '15:15',
       chatId: '222',
-      fromUser: '6SIiVN9PYroTfF1uoT4V',
+      fromUser: 'mxQ5P8SC6ucwFmlh7uBJ',
       text: " is a no-go. Family reunion plans, but we'll meet soon!"
     },
     {
@@ -130,7 +130,7 @@ export const useChatStore = defineStore('chat', () => {
       createdAtDate: '13.09.2023',
       createdAtTime: '17:45',
       chatId: '222',
-      fromUser: '6SIiVN9PYroTfF1uoT4V',
+      fromUser: 'mxQ5P8SC6ucwFmlh7uBJ',
       text: 'I edule a meetup!'
     }
   ])
@@ -142,19 +142,21 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   //Генерация массива для отображения превью в списке слева
-  const setChatPreviews = async () => {
-    console.log(db)
-    const querySnapshot = await getDocs(collection(db, 'users'))
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, ' => ', doc.data())
-    })
-    let result = []
+const setChatPreviews = () => {
+  let result = [];
+  const q = query(collection(db, "users"));
+
+  onSnapshot(q, (snapshot) => {
+    snapshot.forEach((user) => {
+      users.value.push({ ...user.data(), id: user.id });
+    });
+
 
     for (let i = 0; i < users.value.length; i++) {
       for (let j = 0; j < chats.value.length; j++) {
+        console.log(chats.value[j].users[users.value[i].id]);
         if (
-          users.value[i].id !== currentUser.value &&
+          users.value[i].id != currentUser.value &&
           chats.value[j].users.includes(users.value[i].id) &&
           chats.value[j].users.includes(currentUser.value)
         ) {
@@ -167,14 +169,15 @@ export const useChatStore = defineStore('chat', () => {
               text: chats.value[j].lastMessage.text,
               fromUser: chats.value[j].lastMessage.fromUser,
               createdAtDate: chats.value[j].lastMessage.createdAtDate,
-              createdAtTime: chats.value[j].lastMessage.createdAtTime
-            }
-          })
+              createdAtTime: chats.value[j].lastMessage.createdAtTime,
+            },
+          });
         }
       }
     }
-    chatPreviews.value = result
-  }
+    chatPreviews.value = result;
+  });
+};
 
   //Генерация массива сообщений для выбранного чата
   const setMsgGroups = (chatId) => {

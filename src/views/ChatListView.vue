@@ -19,8 +19,8 @@ const showChatRoom = (chatId) => {
   router.push({ name: 'chatroom', params: { chatId: chatId } })
 }
 
-onBeforeMount(async () => {
-  await store.setChatPreviews()
+onBeforeMount(() => {
+  store.setChatPreviews()
 })
 </script>
 

@@ -6,7 +6,7 @@ import { onBeforeMount } from 'vue'
 const store = useChatStore()
 
 onBeforeMount(() => {
-  const currentUserId = '6SIiVN9PYroTfF1uoT4V'
+  const currentUserId = 'mxQ5P8SC6ucwFmlh7uBJ'
   store.setCurrentUser(currentUserId)
 })
 </script>
