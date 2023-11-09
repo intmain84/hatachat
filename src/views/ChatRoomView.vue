@@ -48,14 +48,14 @@ onBeforeMount(async () => {
   }
 
   try {
-    await store.setMsgGroups(props.chatId)
+    await store.setMsgGroups(route.params.chatId)
   } catch (error) {
     console.error('Error:', error)
   }
 })
 
 watch(
-  () => route.params,
+  () => route.params.chatId, //Сначала было просто route.params и при нажатии происходило дублирование запросов в роутах
   async () => {
     getCurrentDate()
     //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
@@ -74,7 +74,7 @@ watch(
     }
 
     try {
-      await store.setMsgGroups(props.chatId)
+      await store.setMsgGroups(route.params.chatId)
     } catch (error) {
       console.error('Error:', error)
     }
