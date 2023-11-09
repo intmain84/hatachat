@@ -93,7 +93,7 @@ export const useChatStore = defineStore('chat', () => {
       snapshot.forEach((message) => {
         messages.value.push({ ...message.data(), id: message.id })
         //Месседжи из базы пушатся каждый раз при переходе в чат. Так быть не должно. Из-за этого в чате с Датчем кажджый раз становется больше сообщений.
-        //В чате с Сэди не сообщений вообще. Выяснить
+        //В чате с Сэди не сообщений вообще. Потому что нет chatId Сэди в messages в базе
       })
 
       console.log(messages.value)
