@@ -96,7 +96,10 @@ export const useChatStore = defineStore('chat', () => {
         //В чате с Сэди не сообщений вообще. Выяснить
       })
 
+      console.log(messages.value)
+
       let activeChatMessages = messages.value.filter((message) => message.chatId === chatId)
+      console.log(activeChatMessages)
 
       activeChatMessages.forEach((msg) => {
         if (result[msg.createdAtDate]) {
