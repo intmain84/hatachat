@@ -1,4 +1,16 @@
-<script setup></script>
+<script setup>
+import { onBeforeMount } from 'vue'
+import { useRouter } from 'vue-router'
+import { useChatStore } from '@/stores/chat'
+
+const store = useChatStore()
+const router = useRouter()
+
+onBeforeMount(async () => {
+  await store.loadCurrentUser('mxQ5P8SC6ucwFmlh7uBJ')
+  router.push('/chatlist')
+})
+</script>
 
 <template>
   <div class="container">

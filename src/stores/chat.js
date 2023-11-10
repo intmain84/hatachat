@@ -1,10 +1,11 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore'
+import { collection, query, where, getDocs, onSnapshot, doc, getDoc } from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const currentUser = ref()
+  const user = ref()
   const chatPreviews = ref([])
   const msgGroups = ref([])
 
@@ -41,6 +42,36 @@ export const useChatStore = defineStore('chat', () => {
 
   //Actions
   //Сохранение в store твоего айдишника
+  const loadCurrentUser = async (currentUserId) => {
+    const docRef = doc(db, 'users', currentUserId)
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      user.value = docSnap.data()
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log('No such document!')
+    }
+
+    // return new Promise((resolve, reject) => {
+    //   console.log('firebase ' + currentUserId)
+
+    //   const docRef = doc(db, "users", currentUserId);
+    //   const docSnap = await getDoc(docRef);
+
+    //   if (docSnap.exists()) {
+    //     console.log("Document data:", docSnap.data());
+    //   } else {
+    //     // docSnap.data() will be undefined in this case
+    //     console.log("No such document!");
+    //   }
+
+    //   resolve()
+    // })
+  }
+
+  //Actions
+  //Сохранение в store твоего айдишника
   const setCurrentUser = (currentUserId) => {
     currentUser.value = currentUserId
   }
@@ -48,36 +79,15 @@ export const useChatStore = defineStore('chat', () => {
   //Генерация массива для отображения превью в списке слева
   const setChatPreviews = async () => {
     let result = []
-    const q = query(collection(db, 'users'))
+    // console.log(currentUser.value)
+    const q = query(collection(db, 'users'), where('email', '!=', user.value.email))
 
     onSnapshot(q, (snapshot) => {
       snapshot.forEach((user) => {
         users.value.push({ ...user.data(), id: user.id })
       })
 
-      for (let i = 0; i < users.value.length; i++) {
-        for (let j = 0; j < chats.value.length; j++) {
-          if (
-            users.value[i].id != currentUser.value &&
-            chats.value[j].users.includes(users.value[i].id) &&
-            chats.value[j].users.includes(currentUser.value)
-          ) {
-            result.push({
-              id: users.value[i].id,
-              avatar: users.value[i].avatar,
-              nickname: users.value[i].nickname,
-              chatId: chats.value[j].chatId,
-              lastMessage: {
-                text: chats.value[j].lastMessage.text,
-                fromUser: chats.value[j].lastMessage.fromUser,
-                createdAtDate: chats.value[j].lastMessage.createdAtDate,
-                createdAtTime: chats.value[j].lastMessage.createdAtTime
-              }
-            })
-          }
-        }
-      }
-      chatPreviews.value = result
+      chatPreviews.value = users.value
     })
   }
 
@@ -136,6 +146,7 @@ export const useChatStore = defineStore('chat', () => {
 
     //Actions
     setCurrentUser,
+    loadCurrentUser,
     setChatPreviews,
     setMsgGroups
   }

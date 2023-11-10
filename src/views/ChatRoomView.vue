@@ -39,7 +39,7 @@ onBeforeMount(async () => {
 
   if (!hasFetchedChatHeader) {
     try {
-      chatHeaderInfo.value = await store.getChatHeaderInfo(props.chatId)
+      chatHeaderInfo.value = await store.getChatHeaderInfo(route.params.chatId)
 
       hasFetchedChatHeader = true //После ставим в true
     } catch (error) {
@@ -66,7 +66,7 @@ watch(
 
     if (!hasFetchedChatHeader) {
       try {
-        chatHeaderInfo.value = await store.getChatHeaderInfo(props.chatId)
+        chatHeaderInfo.value = await store.getChatHeaderInfo(route.params.chatId)
         hasFetchedChatHeader = true //После ставим в true
       } catch (error) {
         console.error('Error:', error)
