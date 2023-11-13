@@ -14,9 +14,9 @@ const route = useRoute()
 
 const noChatSelected = ref(true)
 
-const showChatRoom = (chatId) => {
+const showChatRoom = (userId) => {
   noChatSelected.value = false
-  router.push({ name: 'chatroom', params: { chatId: chatId } })
+  router.push({ name: 'chatroom', params: { chatId: userId } })
 }
 
 onBeforeMount(async () => {
@@ -36,8 +36,8 @@ onBeforeMount(async () => {
             v-for="chat in store.chatPreviews"
             :key="chat.id"
             :chat="chat"
-            @click.stop="showChatRoom(chat.chatId)"
-            :class="{ activeChat: chat.chatId === route.params.chatId }"
+            @click.stop="showChatRoom(chat.id)"
+            :class="{ activeChat: chat.id === route.params.chatId }"
           />
         </ul>
       </div>

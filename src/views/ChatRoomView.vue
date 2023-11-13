@@ -52,6 +52,7 @@ onBeforeMount(async () => {
   } catch (error) {
     console.error('Error:', error)
   }
+  // console.log('onBefore', route.params.chatId)
 })
 
 watch(
@@ -78,6 +79,7 @@ watch(
     } catch (error) {
       console.error('Error:', error)
     }
+    // console.log('watch', route.params.chatId)
   }
 )
 </script>
@@ -104,7 +106,7 @@ watch(
           :key="msg.id"
           :text="msg.text"
           :time="msg.createdAtTime"
-          :class="[msg.fromUser === store.currentUser ? 'message-right' : 'message-left']"
+          :class="[msg.fromUser === store.user.id ? 'message-right' : 'message-left']"
         />
       </div>
     </div>
