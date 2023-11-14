@@ -88,7 +88,8 @@ watch(
   <div class="chat-room">
     <header class="user-chat-header">
       <div class="user-preview">
-        <img class="avatar" :src="chatHeaderInfo.avatar" />
+        <img v-if="chatHeaderInfo.avatar" class="avatar" :src="chatHeaderInfo.avatar" />
+        <img v-else class="avatar" src="https://vuesax.com/avatars/avatar-11.png" />
         <div class="user-data">
           <div class="nickname">{{ chatHeaderInfo.nickname }}</div>
           <div class="user-status">{{ currentDate }}</div>

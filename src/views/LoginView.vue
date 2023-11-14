@@ -1,27 +1,49 @@
 <script setup>
-import { onBeforeMount } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChatStore } from '@/stores/chat'
+import { useAuthStore } from '@/stores/auth'
 
 const store = useChatStore()
+const storeAuth = useAuthStore()
 const router = useRouter()
 
-onBeforeMount(async () => {
-  await store.loadCurrentUser('mxQ5P8SC6ucwFmlh7uBJ')
-  router.push('/chatlist')
+// onBeforeMount(async () => {
+//   await store.loadCurrentUser(storeAuth.user.uid)
+//   router.push('/chatlist')
+// })
+
+const userLoginData = ref({
+  email: '',
+  password: ''
 })
+
+const onSubmit = async () => {
+  if (!userLoginData.value.email || !userLoginData.value.password) {
+    alert('Enter email and password')
+  } else {
+    await storeAuth.loginUser(userLoginData.value)
+    await store.loadCurrentUser(storeAuth.user.uid)
+    router.push('/chatlist')
+  }
+}
 </script>
 
 <template>
   <div class="container">
     <header class="auth-header"><img src="@/assets/logo.svg" alt="" /></header>
     <main class="login-form">
-      <form action="">
+      <form @submit.prevent="onSubmit">
         <h1 class="mb-24">Login</h1>
-        <input type="text" placeholder="Email" class="mb-24" />
-        <input type="password" placeholder="Password" class="mb-24" />
+        <input type="text" placeholder="Email" v-model="userLoginData.email" class="mb-24" />
+        <input
+          type="password"
+          placeholder="Password"
+          v-model="userLoginData.password"
+          class="mb-24"
+        />
         <div class="form-controls">
-          <RouterLink class="btn" to="/chatlist">Login</RouterLink>
+          <button class="btn" @click="onSubmit.prevent">Sign in</button>
           <RouterLink to="/signup">Create an account</RouterLink>
         </div>
       </form>

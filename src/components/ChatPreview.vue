@@ -1,8 +1,5 @@
 <script setup>
 import { toRefs } from 'vue'
-import { useChatStore } from '@/stores/chat'
-
-const store = useChatStore()
 
 const props = defineProps({
   chat: {
@@ -17,7 +14,8 @@ const { chat } = toRefs(props)
 <template>
   <li>
     <a href="#" class="user-preview">
-      <img class="avatar" :src="chat.avatar" alt="" />
+      <img v-if="chat.avatar" class="avatar" :src="chat.avatar" />
+      <img v-else class="avatar" src="https://vuesax.com/avatars/avatar-11.png" />
       <div class="text-data">
         <div class="message-info">
           <div class="nickname">{{ chat.nickname }}</div>

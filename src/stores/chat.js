@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { collection, query, or, where, onSnapshot, doc, getDoc } from 'firebase/firestore'
+import { collection, query, and, or, where, onSnapshot, doc, getDoc } from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const user = ref()
@@ -9,8 +9,6 @@ export const useChatStore = defineStore('chat', () => {
   const msgGroups = ref({})
 
   const users = ref([])
-
-  const messages = ref([])
 
   //Actions
   //Сохранение в store твоего айдишника
@@ -44,25 +42,21 @@ export const useChatStore = defineStore('chat', () => {
   //Генерация массива сообщений для выбранного чата
   const setMsgGroups = async (chatId) => {
     let result = {}
-    messages.value = []
+    let activeChatMessages = []
 
     //Запрос в базу за сообщениями отсюда убрать и переместить в отдельную функцию???
     const q = query(
       collection(db, 'messages'),
-      or(
-        where('fromUser', 'in', [user.value.id, selectedChatUserId]),
-        where('toUser', 'in', [user.value.id, selectedChatUserId])
+      and(
+        or(where('fromUser', '==', user.value.id), where('toUser', '==', user.value.id)),
+        or(where('fromUser', '==', chatId), where('toUser', '==', chatId))
       )
     )
 
     onSnapshot(q, (snapshot) => {
       snapshot.forEach((message) => {
-        messages.value.push({ ...message.data(), id: message.id })
+        activeChatMessages.push({ ...message.data(), id: message.id })
       })
-
-      let activeChatMessages = messages.value.filter(
-        (message) => message.fromUser === chatId || message.toUser === chatId
-      )
 
       activeChatMessages.forEach((msg) => {
         if (result[msg.createdAtDate]) {
@@ -78,7 +72,7 @@ export const useChatStore = defineStore('chat', () => {
   //Getters
   //Получение твоего никнейма для отображения в приветственном окне
   const getCurrentUserNickname = computed(() => {
-    return user.value.nickname
+    return user.value.nickname + '😀'
   })
 
   const getChatHeaderInfo = computed(() => {

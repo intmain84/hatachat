@@ -101,6 +101,7 @@ input[type='email']:focus {
   background: var(--primary-color);
   color: var(--dark-color);
   text-decoration: none;
+  border: none;
   border-radius: var(--primary-radius);
   --smooth-corners: 10;
   height: 48px;
@@ -108,11 +109,13 @@ input[type='email']:focus {
   justify-content: center;
   padding: 0 32px;
   font-weight: 500;
+  font-size: 1rem;
 }
 
 .btn:hover {
   background: var(--primary-color-hover);
   color: var(--primary-text-color-);
+  cursor: pointer;
 }
 
 a {
