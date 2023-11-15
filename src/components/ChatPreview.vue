@@ -15,7 +15,7 @@ const { chat } = toRefs(props)
   <li>
     <a href="#" class="user-preview">
       <img v-if="chat.avatar" class="avatar" :src="chat.avatar" />
-      <img v-else class="avatar" src="https://vuesax.com/avatars/avatar-11.png" />
+      <img v-else class="avatar" src="https://vuesax.com/avatars/avatar-1.png" />
       <div class="text-data">
         <div class="message-info">
           <div class="nickname">{{ chat.nickname }}</div>
