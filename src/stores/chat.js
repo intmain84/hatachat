@@ -1,10 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { collection, query, and, or, where, onSnapshot, doc, getDoc } from 'firebase/firestore'
+import { collection, query, and, or, where, onSnapshot } from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
-  const user = ref()
+  const user = ref({})
   const chatPreviews = ref([])
   const msgGroups = ref({})
 
@@ -12,17 +12,17 @@ export const useChatStore = defineStore('chat', () => {
 
   //Actions
   //Сохранение в store твоего айдишника
-  const loadCurrentUser = async (currentUserId) => {
-    const docRef = doc(db, 'users', currentUserId)
-    const docSnap = await getDoc(docRef)
+  // const loadCurrentUser = async (currentUserId) => {
+  //   const docRef = doc(db, 'users', currentUserId)
+  //   const docSnap = await getDoc(docRef)
 
-    if (docSnap.exists()) {
-      user.value = { ...docSnap.data(), id: currentUserId }
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log('No such document!')
-    }
-  }
+  //   if (docSnap.exists()) {
+  //     user.value = { ...docSnap.data(), id: currentUserId }
+  //   } else {
+  //     // docSnap.data() will be undefined in this case
+  //     console.log('No such document!')
+  //   }
+  // }
 
   //Actions
 
@@ -90,7 +90,6 @@ export const useChatStore = defineStore('chat', () => {
     getChatHeaderInfo,
 
     //Actions
-    loadCurrentUser,
     setChatPreviews,
     setMsgGroups
   }

@@ -2,10 +2,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { useChatStore } from '@/stores/chat'
 
 const storeAuth = useAuthStore()
-const chatStore = useChatStore()
 const router = useRouter()
 
 const userSignUpData = ref({
@@ -22,13 +20,16 @@ const onSubmit = async () => {
     !userSignUpData.value.password ||
     !userSignUpData.value.passwordRepeat
   ) {
-    alert('Fields should not be empty')
+    alert('Fill out all fields')
   } else if (userSignUpData.value.password !== userSignUpData.value.passwordRepeat) {
     alert('Passwords should be similar')
   } else {
-    await storeAuth.registerUser(userSignUpData.value)
-    await chatStore.loadCurrentUser(storeAuth.user.uid) //Тут что-то не то с uid
-    router.push('/chatlist')
+    try {
+      await storeAuth.registerUser(userSignUpData.value)
+      router.push('/')
+    } catch (error) {
+      alert(error.message)
+    }
   }
 }
 </script>

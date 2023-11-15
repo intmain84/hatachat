@@ -1,61 +1,53 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { auth } from '@/firebase'
 import { db } from '../firebase'
-import { doc, setDoc } from 'firebase/firestore'
-
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { query, and, where, getDocs, addDoc, doc, collection } from 'firebase/firestore'
+import { useChatStore } from './chat'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref()
-  //Actions
+  const storeChat = useChatStore()
+
+  //ACTIONS
+  //Sign up
   const registerUser = async (userSignUpData) => {
-    console.log(userSignUpData.nickname)
-    try {
-      console.log('1')
-      const data = await createUserWithEmailAndPassword(
-        auth,
-        userSignUpData.email,
-        userSignUpData.password
+    const q = query(collection(db, 'users'), where('email', '==', userSignUpData.email))
+    const querySnapshot = await getDocs(q)
+    if (querySnapshot.size != 0) throw Error('This email is already registered')
+
+    await addDoc(collection(db, 'users'), {
+      avatar: '',
+      email: userSignUpData.email,
+      nickname: userSignUpData.nickname,
+      password: userSignUpData.password
+    })
+  }
+  //Login
+  const loginUser = async (userLoginData) => {
+    const q = query(
+      collection(db, 'users'),
+      and(
+        where('email', '==', userLoginData.email),
+        where('password', '==', userLoginData.password)
       )
-      // Signed up
-      user.value = data.user
+    )
 
-      console.log(user.value.email)
-    } catch (error) {
-      console.log(error)
-    }
+    const querySnapshot = await getDocs(q)
 
-    try {
-      console.log('2')
-      await setDoc(doc(db, 'users', user.value.uid), {
-        avatar: '',
-        email: user.value.email,
-        nickname: userSignUpData.nickname
-      })
-    } catch (error) {
-      console.log(error)
-    }
+    if (querySnapshot.size == 0) throw Error('Invalid email or password')
+
+    querySnapshot.forEach((doc) => {
+      storeChat.user.id = doc.id
+      storeChat.user.email = doc.data().email
+      storeChat.user.nickname = doc.data().nickname
+    })
   }
 
-  const loginUser = (userLoginData) => {
-    try {
-      const data = signInWithEmailAndPassword(auth, userLoginData.email, userLoginData.password)
-      user.value = data.user
-    } catch (error) {
-      // if (error.code) alert('Wrong email or password')
-      // if (error.code === auth/too-many-requests) alert('Too many requests. Please try again later')
-      console.log(error.code)
-    }
-  }
-
-  //Getter
+  //GETTERS
 
   return {
     //States
     //Getters
     //Actions
-    registerUser,
-    loginUser
+    loginUser,
+    registerUser
   }
 })

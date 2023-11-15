@@ -1,17 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
 
-const store = useChatStore()
 const storeAuth = useAuthStore()
 const router = useRouter()
-
-// onBeforeMount(async () => {
-//   await store.loadCurrentUser(storeAuth.user.uid)
-//   router.push('/chatlist')
-// })
 
 const userLoginData = ref({
   email: '',
@@ -22,9 +15,12 @@ const onSubmit = async () => {
   if (!userLoginData.value.email || !userLoginData.value.password) {
     alert('Enter email and password')
   } else {
-    await storeAuth.loginUser(userLoginData.value)
-    await store.loadCurrentUser(storeAuth.user.uid)
-    router.push('/chatlist')
+    try {
+      await storeAuth.loginUser(userLoginData.value)
+      router.push('/chatlist')
+    } catch (error) {
+      alert(error.message)
+    }
   }
 }
 </script>
