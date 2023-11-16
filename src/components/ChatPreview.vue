@@ -89,4 +89,6 @@ const { chat } = toRefs(props)
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+/* Удалить этот коммент */
 </style>
