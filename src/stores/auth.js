@@ -48,7 +48,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   //Change user status
   const changeUserStatus = async (userStatus) => {
-    console.log(userStatus)
     setDoc(doc(db, 'users', storeChat.user.id), { status: userStatus }, { merge: true })
   }
 

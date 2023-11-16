@@ -83,6 +83,11 @@ export const useChatStore = defineStore('chat', () => {
     })
   }
 
+  //Logout
+  const logOut = () => {
+    user.value = {}
+  }
+
   //Getters
   //Получение твоего никнейма для отображения в приветственном окне
   const getCurrentUserNickname = computed(() => {
@@ -106,6 +111,7 @@ export const useChatStore = defineStore('chat', () => {
     //Actions
     setChatPreviews,
     setMsgGroups,
-    sendMessage
+    sendMessage,
+    logOut
   }
 })

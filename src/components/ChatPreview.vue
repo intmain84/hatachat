@@ -30,7 +30,7 @@ const { chat } = toRefs(props)
           {{ chat.lastMessage.fromUser === store.currentUser ? 'You' : chat.nickname }}:
           {{ chat.lastMessage.text }}
         </div> -->
-        <div class="message-preview">{{ chat.status === true ? 'On 🟢' : 'Off 🔴' }}</div>
+        <div class="message-preview">{{ chat.status === true ? 'Online 🟢' : 'Offline 🔴' }}</div>
       </div>
     </a>
   </li>
