@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { query, and, where, getDocs, addDoc, doc, collection } from 'firebase/firestore'
+import { query, and, where, getDocs, setDoc, doc, addDoc, collection } from 'firebase/firestore'
 import { useChatStore } from './chat'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -13,11 +13,16 @@ export const useAuthStore = defineStore('auth', () => {
     const querySnapshot = await getDocs(q)
     if (querySnapshot.size != 0) throw Error('This email is already registered')
 
+    const avatarBg = '#' + Math.floor(Math.random() * 16777215).toString(16)
+    console.log('#' + avatarBg)
+
     await addDoc(collection(db, 'users'), {
       avatar: '',
       email: userSignUpData.email,
       nickname: userSignUpData.nickname,
-      password: userSignUpData.password
+      password: userSignUpData.password,
+      avatarBg,
+      status: false
     })
   }
   //Login
@@ -41,6 +46,12 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
+  //Change user status
+  const changeUserStatus = async (userStatus) => {
+    console.log(userStatus)
+    setDoc(doc(db, 'users', storeChat.user.id), { status: userStatus }, { merge: true })
+  }
+
   //GETTERS
 
   return {
@@ -48,6 +59,7 @@ export const useAuthStore = defineStore('auth', () => {
     //Getters
     //Actions
     loginUser,
-    registerUser
+    registerUser,
+    changeUserStatus
   }
 })

@@ -1,52 +1,35 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { collection, query, and, or, where, onSnapshot } from 'firebase/firestore'
+import { collection, query, orderBy, addDoc, and, or, where, onSnapshot } from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const user = ref({})
   const chatPreviews = ref([])
   const msgGroups = ref({})
 
-  const users = ref([])
+  // const users = ref([])
 
   //Actions
-  //Сохранение в store твоего айдишника
-  // const loadCurrentUser = async (currentUserId) => {
-  //   const docRef = doc(db, 'users', currentUserId)
-  //   const docSnap = await getDoc(docRef)
-
-  //   if (docSnap.exists()) {
-  //     user.value = { ...docSnap.data(), id: currentUserId }
-  //   } else {
-  //     // docSnap.data() will be undefined in this case
-  //     console.log('No such document!')
-  //   }
-  // }
-
-  //Actions
-
   //Генерация массива для отображения превью в списке слева
   const setChatPreviews = async () => {
     const q = query(collection(db, 'users'), where('email', '!=', user.value.email))
 
     onSnapshot(q, (snapshot) => {
+      let users = []
       snapshot.forEach((user) => {
-        users.value.push({ ...user.data(), id: user.id })
+        users.push({ ...user.data(), id: user.id })
       })
 
-      chatPreviews.value = users.value
+      chatPreviews.value = users
     })
   }
-
   //Генерация массива сообщений для выбранного чата
   const setMsgGroups = async (chatId) => {
-    let result = {}
-    let activeChatMessages = []
-
     //Запрос в базу за сообщениями отсюда убрать и переместить в отдельную функцию???
     const q = query(
       collection(db, 'messages'),
+      orderBy('timestamp', 'asc'),
       and(
         or(where('fromUser', '==', user.value.id), where('toUser', '==', user.value.id)),
         or(where('fromUser', '==', chatId), where('toUser', '==', chatId))
@@ -54,6 +37,8 @@ export const useChatStore = defineStore('chat', () => {
     )
 
     onSnapshot(q, (snapshot) => {
+      let activeChatMessages = []
+      let result = {}
       snapshot.forEach((message) => {
         activeChatMessages.push({ ...message.data(), id: message.id })
       })
@@ -66,6 +51,35 @@ export const useChatStore = defineStore('chat', () => {
         }
       })
       msgGroups.value = result
+    })
+  }
+
+  //Отправка сообщения
+  const sendMessage = async (usertoUserId, message) => {
+    const dateStamp = new Date()
+
+    const timestamp = dateStamp.getTime()
+
+    const hour = dateStamp.getHours() + ''
+    const min = dateStamp.getMinutes() + ''
+    const currentTime = `${hour.padStart(2, '0')}:${min.padStart(2, '0')}`
+
+    const currentDay = dateStamp.getDate() + ''
+    const currentMonth = dateStamp.getMonth() + 1 + ''
+    const currentYear = dateStamp.getFullYear() + ''
+    const currentDate = `${currentDay.padStart(2, '0')}.${currentMonth.padStart(
+      2,
+      '0'
+    )}.${currentYear.padStart(2, '0')}`
+
+    await addDoc(collection(db, 'messages'), {
+      timestamp,
+      createdAtDate: currentDate,
+      createdAtTime: currentTime,
+      fromUser: user.value.id,
+      toUser: usertoUserId,
+      text: message,
+      isRead: false
     })
   }
 
@@ -91,6 +105,7 @@ export const useChatStore = defineStore('chat', () => {
 
     //Actions
     setChatPreviews,
-    setMsgGroups
+    setMsgGroups,
+    sendMessage
   }
 })

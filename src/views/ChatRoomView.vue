@@ -7,7 +7,7 @@ import { ref, watch, onBeforeMount } from 'vue'
 import { useChatStore } from '../stores/chat'
 import { useRoute } from 'vue-router'
 
-const store = useChatStore()
+const storeChat = useChatStore()
 const route = useRoute()
 const props = defineProps(['chatId'])
 
@@ -29,6 +29,12 @@ const getCurrentDate = () => {
   )}.${currentYear.padStart(2, '0')}`
 }
 
+const message = ref('')
+const sendMessage = () => {
+  storeChat.sendMessage(props.chatId, message.value)
+  message.value = ''
+}
+
 onBeforeMount(async () => {
   getCurrentDate()
   //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
@@ -39,7 +45,7 @@ onBeforeMount(async () => {
 
   if (!hasFetchedChatHeader) {
     try {
-      chatHeaderInfo.value = await store.getChatHeaderInfo(route.params.chatId)
+      chatHeaderInfo.value = await storeChat.getChatHeaderInfo(route.params.chatId)
 
       hasFetchedChatHeader = true //После ставим в true
     } catch (error) {
@@ -48,7 +54,7 @@ onBeforeMount(async () => {
   }
 
   try {
-    await store.setMsgGroups(route.params.chatId)
+    await storeChat.setMsgGroups(route.params.chatId)
   } catch (error) {
     console.error('Error:', error)
   }
@@ -67,7 +73,7 @@ watch(
 
     if (!hasFetchedChatHeader) {
       try {
-        chatHeaderInfo.value = await store.getChatHeaderInfo(route.params.chatId)
+        chatHeaderInfo.value = await storeChat.getChatHeaderInfo(route.params.chatId)
         hasFetchedChatHeader = true //После ставим в true
       } catch (error) {
         console.error('Error:', error)
@@ -75,11 +81,10 @@ watch(
     }
 
     try {
-      await store.setMsgGroups(route.params.chatId)
+      await storeChat.setMsgGroups(route.params.chatId)
     } catch (error) {
       console.error('Error:', error)
     }
-    // console.log('watch', route.params.chatId)
   }
 )
 </script>
@@ -89,7 +94,9 @@ watch(
     <header class="user-chat-header">
       <div class="user-preview">
         <img v-if="chatHeaderInfo.avatar" class="avatar" :src="chatHeaderInfo.avatar" />
-        <img v-else class="avatar" src="https://vuesax.com/avatars/avatar-11.png" />
+        <div v-else class="avatar" :style="{ backgroundColor: chatHeaderInfo.avatarBg }">
+          {{ chatHeaderInfo.nickname.charAt(0).toUpperCase() }}
+        </div>
         <div class="user-data">
           <div class="nickname">{{ chatHeaderInfo.nickname }}</div>
           <div class="user-status">{{ currentDate }}</div>
@@ -98,7 +105,11 @@ watch(
     </header>
 
     <div class="messages-container">
-      <div class="messages-group" v-for="(msgGroup, key, index) in store.msgGroups" :key="index">
+      <div
+        class="messages-group"
+        v-for="(msgGroup, key, index) in storeChat.msgGroups"
+        :key="index"
+      >
         <div class="messages-date">
           {{ key == currentDate ? 'Today' : key }}
         </div>
@@ -107,23 +118,25 @@ watch(
           :key="msg.id"
           :text="msg.text"
           :time="msg.createdAtTime"
-          :class="[msg.fromUser === store.user.id ? 'message-right' : 'message-left']"
+          :class="[msg.fromUser === storeChat.user.id ? 'message-right' : 'message-left']"
         />
       </div>
     </div>
 
     <footer class="user-chat-footer" :class="{ activeField: isFieldActive }">
-      <FaceSmileIcon class="icon icon24" />
-      <FaceSmileIcon class="icon icon24" />
-      <input
-        @focus="isFieldActive = true"
-        @blur="isFieldActive = false"
-        type="text"
-        name="message"
-        id="message"
-        placeholder="Type message..."
-      />
-      <PaperAirplaneIcon class="icon icon24" />
+      <!-- <FaceSmileIcon class="icon icon24" />
+      <FaceSmileIcon class="icon icon24" /> -->
+      <form @submit.prevent="sendMessage">
+        <input
+          @focus="isFieldActive = true"
+          @blur="isFieldActive = false"
+          type="text"
+          v-model="message"
+          name="message"
+          id="message"
+          placeholder="Type message..."
+        />
+      </form>
     </footer>
   </div>
 </template>
@@ -155,6 +168,10 @@ watch(
 }
 
 .user-chat-header .user-preview .avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
   width: 40px;
   height: 40px;
   border-radius: 100%;
@@ -181,9 +198,14 @@ watch(
   color: #fff;
 }
 
+form {
+  width: 100%;
+}
+
 .user-chat-footer input[type='text'] {
   background: var(--dark-elements);
   height: 20px;
+  width: 100%;
 }
 
 .user-chat-footer.activeField,

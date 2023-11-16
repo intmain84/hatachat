@@ -3,24 +3,52 @@
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import ChatPreview from '@/components/ChatPreview.vue'
 
-import { ref, onBeforeMount } from 'vue'
+import { ref, watchEffect, onBeforeUnmount, onBeforeMount } from 'vue'
 import { useChatStore } from '@/stores/chat'
+import { useAuthStore } from '@/stores/auth'
 import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
 
-const store = useChatStore()
+const storeChat = useChatStore()
+const storeAuth = useAuthStore()
 
 const router = useRouter()
 const route = useRoute()
 
 const noChatSelected = ref(true)
 
+const userActive = ref(true)
+
+const handleVisibilityChange = async () => {
+  if (document.hidden) {
+    userActive.value = false
+  } else {
+    userActive.value = true
+  }
+  await storeAuth.changeUserStatus(userActive.value)
+}
+
+// Add event listener for visibility change
+document.addEventListener('visibilitychange', handleVisibilityChange)
+
 const showChatRoom = (userId) => {
   noChatSelected.value = false
   router.push({ name: 'chatroom', params: { chatId: userId } })
 }
 
+const logout = () => {}
+
 onBeforeMount(async () => {
-  await store.setChatPreviews()
+  await storeChat.setChatPreviews()
+})
+
+onBeforeUnmount(() => {
+  console.log('asd')
+})
+
+watchEffect(() => {
+  return () => {
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }
 })
 </script>
 
@@ -33,7 +61,7 @@ onBeforeMount(async () => {
         </header> -->
         <ul>
           <ChatPreview
-            v-for="chat in store.chatPreviews"
+            v-for="chat in storeChat.chatPreviews"
             :key="chat.id"
             :chat="chat"
             @click.stop="showChatRoom(chat.id)"
@@ -44,7 +72,7 @@ onBeforeMount(async () => {
       <footer class="sidebar-footer">
         <RouterLink to="myaccount">My account</RouterLink>
         <!-- <a href="#"><UserCircleIcon class="icon24" /> My account</a> -->
-        <a href="#"><ArrowRightOnRectangleIcon class="icon24" /> Logout</a>
+        <a href="#"><ArrowRightOnRectangleIcon class="icon24" @click.prevent="logout" /> Logout</a>
       </footer>
     </aside>
     <main class="main">

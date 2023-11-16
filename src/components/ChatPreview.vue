@@ -15,7 +15,9 @@ const { chat } = toRefs(props)
   <li>
     <a href="#" class="user-preview">
       <img v-if="chat.avatar" class="avatar" :src="chat.avatar" />
-      <img v-else class="avatar" src="https://vuesax.com/avatars/avatar-1.png" />
+      <div v-else class="avatar" :style="{ backgroundColor: chat.avatarBg }">
+        {{ chat.nickname.charAt(0).toUpperCase() }}
+      </div>
       <div class="text-data">
         <div class="message-info">
           <div class="nickname">{{ chat.nickname }}</div>
@@ -28,7 +30,7 @@ const { chat } = toRefs(props)
           {{ chat.lastMessage.fromUser === store.currentUser ? 'You' : chat.nickname }}:
           {{ chat.lastMessage.text }}
         </div> -->
-        <div class="message - preview">No messages</div>
+        <div class="message-preview">{{ chat.status === true ? 'Online 🟢' : 'Offline 🔴' }}</div>
       </div>
     </a>
   </li>
@@ -52,6 +54,10 @@ const { chat } = toRefs(props)
 }
 
 .chatlist .user-preview .avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
   width: 40px;
   height: 40px;
   border-radius: 100%;
