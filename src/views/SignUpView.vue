@@ -39,22 +39,15 @@ const onSubmit = async () => {
     <header class="auth-header"><img src="@/assets/logo.svg" alt="" /></header>
     <main class="login-form">
       <h1 class="mb-24">Sign Up</h1>
-      <!-- <div class="upload-avatar mb-24">
-        <span>Add avatar</span>
-        <input type="file" class="upload-field" />
-      </div> -->
       <form @submit.prevent="onSubmit">
-        {{ userSignUpData.email }}
         <input type="email" placeholder="Email" v-model="userSignUpData.email" class="mb-24" />
         <input type="text" placeholder="Nickname" v-model="userSignUpData.nickname" class="mb-24" />
-        {{ userSignUpData.password }}
         <input
           type="password"
           placeholder="Password"
           v-model="userSignUpData.password"
           class="mb-24"
         />
-        {{ userSignUpData.passwordRepeat }}
         <input
           type="password"
           placeholder="Repeat password"
