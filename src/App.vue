@@ -22,7 +22,6 @@ import { RouterView } from 'vue-router'
 
   --primary-radius: 9px;
 }
-/* ыва */
 
 *,
 *::before,

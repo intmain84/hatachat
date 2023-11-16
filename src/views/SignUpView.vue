@@ -64,6 +64,7 @@ const onSubmit = async () => {
 </template>
 
 <style scoped>
+/* вы */
 .auth-header {
   height: 64px;
   text-align: center;
