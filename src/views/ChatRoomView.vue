@@ -143,13 +143,14 @@ const stopTyping = async () => {
   <div class="chat-room">
     <header class="user-chat-header">
       <div class="user-preview">
+        //chatHeaderInfo затягивается один раз при входе в комнату
         <img v-if="chatHeaderInfo.avatar" class="avatar" :src="chatHeaderInfo.avatar" />
         <div v-else class="avatar" :style="{ backgroundColor: chatHeaderInfo.avatarBg }">
           {{ chatHeaderInfo.nickname.charAt(0).toUpperCase() }}
         </div>
         <div class="user-data">
-          <div class="nickname">{{ chatHeaderInfo.nickname }}</div>
-          {{ chatHeaderInfo.isTyping }}
+          <div class="nickname">{{ chatHeaderInfo.status }}</div>
+          {{ chatHeaderInfo.status }}
           <!-- <div v-if="chatHeaderInfo.isTyping">{{ 'Typing...' }}</div> -->
           <!-- <div v-else class="user-status">
             {{ chatHeaderInfo.status ? 'Online' : 'Offline' }}
