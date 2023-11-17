@@ -14,6 +14,10 @@ const { chat } = toRefs(props)
 <template>
   <li>
     <a href="#" class="user-preview">
+      <div
+        class="user-status"
+        :style="{ backgroundColor: chat.status === true ? '#43bb65' : '#e74444' }"
+      ></div>
       <img v-if="chat.avatar" class="avatar" :src="chat.avatar" />
       <div v-else class="avatar" :style="{ backgroundColor: chat.avatarBg }">
         {{ chat.nickname.charAt(0).toUpperCase() }}
@@ -21,7 +25,7 @@ const { chat } = toRefs(props)
       <div class="text-data">
         <div class="message-info">
           <div class="nickname">{{ chat.nickname }}</div>
-          <div class="message-info">
+          <div v-if="chat.nickname" class="message-info">
             <!-- <span v-if="chat.newMessages" class="new-messages">{{ chat.newMessages }}</span
             ><span class="message-time">{{ chat.lastMessage.createdAtTime }}</span> -->
           </div>
@@ -30,7 +34,8 @@ const { chat } = toRefs(props)
           {{ chat.lastMessage.fromUser === store.currentUser ? 'You' : chat.nickname }}:
           {{ chat.lastMessage.text }}
         </div> -->
-        <div class="message-preview">{{ chat.status === true ? 'Xaxaxa 🟢' : 'Offline 🔴' }}</div>
+        <div v-if="chat.isTyping" class="message-preview">Is typing...</div>
+        <div v-else class="message-preview">Last message</div>
       </div>
     </a>
   </li>
@@ -38,15 +43,31 @@ const { chat } = toRefs(props)
 
 <style scoped>
 .chatlist .user-preview {
+  position: relative;
   display: flex;
   align-items: center;
   color: #fff;
   padding: 16px;
   font-size: 0.75rem;
 }
+
+.user-status {
+  position: absolute;
+  bottom: 16px;
+  width: 12px;
+  height: 12px;
+  border-radius: 4444px;
+  border: 2px solid var(--darkest-background);
+}
+
 .chatlist .user-preview:hover {
   background: var(--darker-background);
 }
+
+.chatlist .user-preview:hover .user-status {
+  border: 2px solid var(--darker-background);
+}
+
 .chatlist .user-preview .text-data {
   display: flex;
   flex-direction: column;

@@ -1,9 +1,9 @@
 <script setup>
-// import { UserCircleIcon } from '@heroicons/vue/24/outline'
+import { UserCircleIcon } from '@heroicons/vue/24/outline'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import ChatPreview from '@/components/ChatPreview.vue'
 
-import { ref, watchEffect, onBeforeUnmount, onBeforeMount } from 'vue'
+import { ref, watchEffect, onBeforeMount } from 'vue'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
 import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
@@ -16,7 +16,7 @@ const route = useRoute()
 
 const noChatSelected = ref(true)
 
-const userActive = ref(true)
+const userActive = ref(false)
 
 const handleVisibilityChange = async () => {
   if (document.hidden) {
@@ -36,17 +36,13 @@ const showChatRoom = (userId) => {
 }
 
 const logout = async () => {
-  storeChat.logOut()
   await storeAuth.changeUserStatus(false)
+  storeChat.logOut()
   router.push({ name: 'home' })
 }
 
 onBeforeMount(async () => {
   await storeChat.setChatPreviews()
-})
-
-onBeforeUnmount(() => {
-  console.log('asd')
 })
 
 watchEffect(() => {
@@ -74,9 +70,8 @@ watchEffect(() => {
         </ul>
       </div>
       <footer class="sidebar-footer">
-        <RouterLink to="myaccount">My account</RouterLink>
-        <!-- <a href="#"><UserCircleIcon class="icon24" /> My account</a> -->
-        <a href="#"><ArrowRightOnRectangleIcon class="icon24" @click.prevent="logout" /> Logout</a>
+        <RouterLink to="myaccount"><UserCircleIcon class="icon24" /> My account</RouterLink>
+        <a href="#" @click.prevent="logout"><ArrowRightOnRectangleIcon class="icon24" /> Logout</a>
       </footer>
     </aside>
     <main class="main">
@@ -113,6 +108,7 @@ watchEffect(() => {
   list-style: none;
   margin: 0;
   margin-top: 8px;
+  margin-bottom: 8px;
   padding: 0;
 }
 

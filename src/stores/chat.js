@@ -1,14 +1,22 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { collection, query, orderBy, addDoc, and, or, where, onSnapshot } from 'firebase/firestore'
+import {
+  collection,
+  query,
+  orderBy,
+  updateDoc,
+  addDoc,
+  and,
+  or,
+  where,
+  onSnapshot
+} from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const user = ref({})
   const chatPreviews = ref([])
   const msgGroups = ref({})
-
-  // const users = ref([])
 
   //Actions
   //Генерация массива для отображения превью в списке слева

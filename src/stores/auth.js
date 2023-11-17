@@ -14,7 +14,6 @@ export const useAuthStore = defineStore('auth', () => {
     if (querySnapshot.size != 0) throw Error('This email is already registered')
 
     const avatarBg = '#' + Math.floor(Math.random() * 16777215).toString(16)
-    console.log('#' + avatarBg)
 
     await addDoc(collection(db, 'users'), {
       avatar: '',
@@ -22,7 +21,8 @@ export const useAuthStore = defineStore('auth', () => {
       nickname: userSignUpData.nickname,
       password: userSignUpData.password,
       avatarBg,
-      status: false
+      status: false,
+      isTyping: false
     })
   }
   //Login
@@ -39,16 +39,24 @@ export const useAuthStore = defineStore('auth', () => {
 
     if (querySnapshot.size == 0) throw Error('Invalid email or password')
 
-    querySnapshot.forEach((doc) => {
-      storeChat.user.id = doc.id
-      storeChat.user.email = doc.data().email
-      storeChat.user.nickname = doc.data().nickname
+    querySnapshot.forEach((userFromBd) => {
+      storeChat.user.id = userFromBd.id
+      storeChat.user.email = userFromBd.data().email
+      storeChat.user.nickname = userFromBd.data().nickname
+      storeChat.user.avatarBg = userFromBd.data().avatarBg
+      storeChat.user.avatar = userFromBd.data().avatar
     })
   }
 
   //Change user status
   const changeUserStatus = async (userStatus) => {
-    setDoc(doc(db, 'users', storeChat.user.id), { status: userStatus }, { merge: true })
+    await setDoc(doc(db, 'users', storeChat.user.id), { status: userStatus }, { merge: true })
+  }
+
+  //Checking if user typing right now
+  const isUserTyping = async (isTyping) => {
+    console.log(isTyping)
+    await setDoc(doc(db, 'users', storeChat.user.id), { isTyping: isTyping }, { merge: true })
   }
 
   //GETTERS
@@ -59,6 +67,7 @@ export const useAuthStore = defineStore('auth', () => {
     //Actions
     loginUser,
     registerUser,
+    isUserTyping,
     changeUserStatus
   }
 })

@@ -3,11 +3,13 @@ import MessageBubble from '@/components/MessageBubble.vue'
 import { FaceSmileIcon } from '@heroicons/vue/24/outline'
 import { PaperAirplaneIcon } from '@heroicons/vue/24/outline'
 
-import { ref, watch, onBeforeMount } from 'vue'
-import { useChatStore } from '../stores/chat'
+import { ref, computed, watch, onBeforeMount } from 'vue'
+import { useChatStore } from '@/stores/chat'
+import { useAuthStore } from '@/stores/auth'
 import { useRoute } from 'vue-router'
 
 const storeChat = useChatStore()
+const storeAuth = useAuthStore()
 const route = useRoute()
 const props = defineProps(['chatId'])
 
@@ -31,6 +33,7 @@ const getCurrentDate = () => {
 
 const message = ref('')
 const sendMessage = () => {
+  if (!message.value) return
   storeChat.sendMessage(props.chatId, message.value)
   message.value = ''
 }
@@ -87,6 +90,53 @@ watch(
     }
   }
 )
+
+watch(
+  () => route.params.chatId, //Сначала было просто route.params и при нажатии происходило дублирование запросов в роутах
+  async () => {
+    getCurrentDate()
+    //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
+    if (props.chatId !== chatHeaderInfo.value.chatId) {
+      //Если не совпадает то false и тянем новые данные
+      hasFetchedChatHeader = false
+    }
+
+    if (!hasFetchedChatHeader) {
+      try {
+        chatHeaderInfo.value = await storeChat.getChatHeaderInfo(route.params.chatId)
+        hasFetchedChatHeader = true //После ставим в true
+      } catch (error) {
+        console.error('Error:', error)
+      }
+    }
+
+    try {
+      await storeChat.setMsgGroups(route.params.chatId)
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+)
+
+//Sorting messages blocks
+const reversedMessages = computed(() => {
+  const msgGroupsArray = Object.entries(storeChat.msgGroups)
+
+  // Reverse the array
+  const reversedArray = msgGroupsArray.reverse()
+
+  return reversedArray
+})
+
+const startTyping = async () => {
+  isFieldActive.value = true
+  await storeAuth.isUserTyping(isFieldActive.value)
+}
+
+const stopTyping = async () => {
+  isFieldActive.value = false
+  await storeAuth.isUserTyping(isFieldActive.value)
+}
 </script>
 
 <template>
@@ -99,22 +149,22 @@ watch(
         </div>
         <div class="user-data">
           <div class="nickname">{{ chatHeaderInfo.nickname }}</div>
-          <div class="user-status">{{ currentDate }}</div>
+          {{ chatHeaderInfo.isTyping }}
+          <!-- <div v-if="chatHeaderInfo.isTyping">{{ 'Typing...' }}</div> -->
+          <!-- <div v-else class="user-status">
+            {{ chatHeaderInfo.status ? 'Online' : 'Offline' }}
+          </div> -->
         </div>
       </div>
     </header>
 
     <div class="messages-container">
-      <div
-        class="messages-group"
-        v-for="(msgGroup, key, index) in storeChat.msgGroups"
-        :key="index"
-      >
+      <div class="messages-group" v-for="msg in reversedMessages" :key="msg.id">
         <div class="messages-date">
-          {{ key == currentDate ? 'Today' : key }}
+          {{ msg[0] === currentDate ? 'Today' : msg[0] }}
         </div>
         <MessageBubble
-          v-for="msg in msgGroup"
+          v-for="msg in msg[1]"
           :key="msg.id"
           :text="msg.text"
           :time="msg.createdAtTime"
@@ -128,8 +178,8 @@ watch(
       <FaceSmileIcon class="icon icon24" /> -->
       <form @submit.prevent="sendMessage">
         <input
-          @focus="isFieldActive = true"
-          @blur="isFieldActive = false"
+          @focus="startTyping"
+          @blur="stopTyping"
           type="text"
           v-model="message"
           name="message"
