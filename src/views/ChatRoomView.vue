@@ -38,24 +38,12 @@ const sendMessage = () => {
   message.value = ''
 }
 
+const getUserInfo = computed(() => {
+  return storeChat.chatPreviews.find((chat) => chat.id === route.params.chatId)
+})
+
 onBeforeMount(async () => {
   getCurrentDate()
-  //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
-  if (props.chatId !== chatHeaderInfo.value.chatId) {
-    //Если не совпадает то false и тянем новые данные
-    hasFetchedChatHeader = false
-  }
-
-  if (!hasFetchedChatHeader) {
-    try {
-      chatHeaderInfo.value = await storeChat.getChatHeaderInfo(route.params.chatId)
-
-      hasFetchedChatHeader = true //После ставим в true
-    } catch (error) {
-      console.error('Error:', error)
-    }
-  }
-
   try {
     await storeChat.setMsgGroups(route.params.chatId)
   } catch (error) {
@@ -68,20 +56,6 @@ watch(
   () => route.params.chatId, //Сначала было просто route.params и при нажатии происходило дублирование запросов в роутах
   async () => {
     getCurrentDate()
-    //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
-    if (props.chatId !== chatHeaderInfo.value.chatId) {
-      //Если не совпадает то false и тянем новые данные
-      hasFetchedChatHeader = false
-    }
-
-    if (!hasFetchedChatHeader) {
-      try {
-        chatHeaderInfo.value = await storeChat.getChatHeaderInfo(route.params.chatId)
-        hasFetchedChatHeader = true //После ставим в true
-      } catch (error) {
-        console.error('Error:', error)
-      }
-    }
 
     try {
       await storeChat.setMsgGroups(route.params.chatId)
@@ -95,20 +69,6 @@ watch(
   () => route.params.chatId, //Сначала было просто route.params и при нажатии происходило дублирование запросов в роутах
   async () => {
     getCurrentDate()
-    //Проверка совпадает ли текущего роутера параметр chatId с параметром chatHeader chatId
-    if (props.chatId !== chatHeaderInfo.value.chatId) {
-      //Если не совпадает то false и тянем новые данные
-      hasFetchedChatHeader = false
-    }
-
-    if (!hasFetchedChatHeader) {
-      try {
-        chatHeaderInfo.value = await storeChat.getChatHeaderInfo(route.params.chatId)
-        hasFetchedChatHeader = true //После ставим в true
-      } catch (error) {
-        console.error('Error:', error)
-      }
-    }
 
     try {
       await storeChat.setMsgGroups(route.params.chatId)
@@ -143,18 +103,15 @@ const stopTyping = async () => {
   <div class="chat-room">
     <header class="user-chat-header">
       <div class="user-preview">
-        //chatHeaderInfo затягивается один раз при входе в комнату
-        <img v-if="chatHeaderInfo.avatar" class="avatar" :src="chatHeaderInfo.avatar" />
-        <div v-else class="avatar" :style="{ backgroundColor: chatHeaderInfo.avatarBg }">
-          {{ chatHeaderInfo.nickname.charAt(0).toUpperCase() }}
+        <!-- chatHeaderInfo затягивается один раз при входе в комнату -->
+        <img v-if="chatHeaderInfo.avatar" class="avatar" :src="getUserInfo.avatar" />
+        <div v-else class="avatar" :style="{ backgroundColor: getUserInfo.avatarBg }">
+          {{ getUserInfo.nickname.charAt(0).toUpperCase() }}
         </div>
         <div class="user-data">
-          <div class="nickname">{{ chatHeaderInfo.status }}</div>
-          {{ chatHeaderInfo.status }}
-          <!-- <div v-if="chatHeaderInfo.isTyping">{{ 'Typing...' }}</div> -->
-          <!-- <div v-else class="user-status">
-            {{ chatHeaderInfo.status ? 'Online' : 'Offline' }}
-          </div> -->
+          <div class="nickname">{{ getUserInfo.nickname }}</div>
+          <div v-if="getUserInfo.isTyping" class="status">{{ 'is typing...' }}</div>
+          <div v-else class="status">{{ getUserInfo.status ? 'Online' : 'Offline' }}</div>
         </div>
       </div>
     </header>

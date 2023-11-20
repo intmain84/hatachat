@@ -1,17 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import {
-  collection,
-  query,
-  orderBy,
-  updateDoc,
-  addDoc,
-  and,
-  or,
-  where,
-  onSnapshot
-} from 'firebase/firestore'
+import { collection, query, orderBy, addDoc, and, or, where, onSnapshot } from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const user = ref({})
@@ -102,9 +92,9 @@ export const useChatStore = defineStore('chat', () => {
     return user.value.nickname + '😀'
   })
 
-  const getChatHeaderInfo = computed(() => {
-    return (chatId) => chatPreviews.value.find((chat) => chat.id === chatId)
-  })
+  // const getChatHeaderInfo = computed(() => {
+  //   return (chatId) => chatPreviews.value.find((chat) => chat.id === chatId)
+  // })
 
   return {
     //States
@@ -114,7 +104,6 @@ export const useChatStore = defineStore('chat', () => {
 
     //Getters
     getCurrentUserNickname,
-    getChatHeaderInfo,
 
     //Actions
     setChatPreviews,
