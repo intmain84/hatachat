@@ -15,7 +15,6 @@ const props = defineProps(['chatId'])
 
 const isFieldActive = ref(false)
 let chatHeaderInfo = ref({})
-let hasFetchedChatHeader = false
 
 const currentDate = ref('')
 
@@ -32,10 +31,12 @@ const getCurrentDate = () => {
 }
 
 const message = ref('')
+const messageInput = ref(null)
 const sendMessage = () => {
   if (!message.value) return
   storeChat.sendMessage(props.chatId, message.value)
   message.value = ''
+  messageInput.value.blur()
 }
 
 const getUserInfo = computed(() => {
@@ -49,7 +50,6 @@ onBeforeMount(async () => {
   } catch (error) {
     console.error('Error:', error)
   }
-  // console.log('onBefore', route.params.chatId)
 })
 
 watch(
@@ -58,19 +58,7 @@ watch(
     getCurrentDate()
 
     try {
-      await storeChat.setMsgGroups(route.params.chatId)
-    } catch (error) {
-      console.error('Error:', error)
-    }
-  }
-)
-
-watch(
-  () => route.params.chatId, //Сначала было просто route.params и при нажатии происходило дублирование запросов в роутах
-  async () => {
-    getCurrentDate()
-
-    try {
+      if (!route.params.chatId) return
       await storeChat.setMsgGroups(route.params.chatId)
     } catch (error) {
       console.error('Error:', error)
@@ -140,6 +128,7 @@ const stopTyping = async () => {
           @blur="stopTyping"
           type="text"
           v-model="message"
+          ref="messageInput"
           name="message"
           id="message"
           placeholder="Type message..."

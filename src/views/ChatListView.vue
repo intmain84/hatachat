@@ -3,7 +3,7 @@ import { UserCircleIcon } from '@heroicons/vue/24/outline'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import ChatPreview from '@/components/ChatPreview.vue'
 
-import { ref, watchEffect, onBeforeMount } from 'vue'
+import { ref, watchEffect, onMounted, onBeforeMount } from 'vue'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
 import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
@@ -43,6 +43,15 @@ const logout = async () => {
 
 onBeforeMount(async () => {
   await storeChat.setChatPreviews()
+  await handleVisibilityChange()
+})
+
+onMounted(() => {
+  if (document.hidden) {
+    userActive.value = false
+  } else {
+    userActive.value = true
+  }
 })
 
 watchEffect(() => {
@@ -70,7 +79,9 @@ watchEffect(() => {
         </ul>
       </div>
       <footer class="sidebar-footer">
-        <RouterLink to="myaccount"><UserCircleIcon class="icon24" /> My account</RouterLink>
+        <RouterLink :to="{ name: 'myaccount' }" :class="{ activeChat: route.name === 'myaccount' }"
+          ><UserCircleIcon class="icon24" /> My account</RouterLink
+        >
         <a href="#" @click.prevent="logout"><ArrowRightOnRectangleIcon class="icon24" /> Logout</a>
       </footer>
     </aside>

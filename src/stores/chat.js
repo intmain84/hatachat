@@ -89,13 +89,8 @@ export const useChatStore = defineStore('chat', () => {
   //Getters
   //Получение твоего никнейма для отображения в приветственном окне
   const getCurrentUserNickname = computed(() => {
-    return user.value.nickname + '😀'
+    return user.value.nickname
   })
-
-  // const getChatHeaderInfo = computed(() => {
-  //   return (chatId) => chatPreviews.value.find((chat) => chat.id === chatId)
-  // })
-
   return {
     //States
     chatPreviews,

@@ -25,15 +25,15 @@ const router = createRouter({
           component: NoChatSelectedView
         },
         {
-          path: ':chatId',
-          name: 'chatroom',
-          component: ChatRoomView,
+          path: 'myaccount',
+          name: 'myaccount',
+          component: MyAccountView,
           props: true
         },
         {
-          path: '/myaccount',
-          name: 'myaccount',
-          component: MyAccountView,
+          path: ':chatId',
+          name: 'chatroom',
+          component: ChatRoomView,
           props: true
         }
       ]
