@@ -22,9 +22,9 @@ export const useChatStore = defineStore('chat', () => {
       chatPreviews.value = users
     })
   }
+
   //Генерация массива сообщений для выбранного чата
   const setMsgGroups = async (chatId) => {
-    //Запрос в базу за сообщениями отсюда убрать и переместить в отдельную функцию???
     const q = query(
       collection(db, 'messages'),
       orderBy('timestamp', 'asc'),
@@ -72,6 +72,7 @@ export const useChatStore = defineStore('chat', () => {
 
     await addDoc(collection(db, 'messages'), {
       timestamp,
+      dateStamp: dateStamp,
       createdAtDate: currentDate,
       createdAtTime: currentTime,
       fromUser: user.value.id,

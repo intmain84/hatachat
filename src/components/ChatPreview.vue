@@ -25,15 +25,8 @@ const { chat } = toRefs(props)
       <div class="text-data">
         <div class="message-info">
           <div class="nickname">{{ chat.nickname }}</div>
-          <div v-if="chat.nickname" class="message-info">
-            <!-- <span v-if="chat.newMessages" class="new-messages">{{ chat.newMessages }}</span
-            ><span class="message-time">{{ chat.lastMessage.createdAtTime }}</span> -->
-          </div>
+          <div v-if="chat.nickname" class="message-info"></div>
         </div>
-        <!-- <div v-if="chat.lastMessage.text" class="message-preview">
-          {{ chat.lastMessage.fromUser === store.currentUser ? 'You' : chat.nickname }}:
-          {{ chat.lastMessage.text }}
-        </div> -->
         <div v-if="chat.isTyping" class="message-preview">Is typing...</div>
         <div v-else class="message-preview">Last message</div>
       </div>
