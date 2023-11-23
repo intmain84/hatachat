@@ -11,9 +11,10 @@ export const useChatStore = defineStore('chat', () => {
   //Actions
   //Генерация массива для отображения превью в списке слева
   const setChatPreviews = async () => {
-    const q = query(collection(db, 'users'), where('email', '!=', user.value.email))
+    //Get all users except me
+    const q1 = query(collection(db, 'users'), where('email', '!=', user.value.email))
 
-    onSnapshot(q, (snapshot) => {
+    onSnapshot(q1, (snapshot) => {
       let users = []
       snapshot.forEach((user) => {
         users.push({ ...user.data(), id: user.id })
@@ -79,6 +80,11 @@ export const useChatStore = defineStore('chat', () => {
       toUser: usertoUserId,
       text: message,
       isRead: false
+    })
+
+    await addDoc(collection(db, 'users'), {
+      id: user.value.id,
+      message
     })
   }
 

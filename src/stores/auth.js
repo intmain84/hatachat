@@ -22,7 +22,8 @@ export const useAuthStore = defineStore('auth', () => {
       password: userSignUpData.password,
       avatarBg,
       status: false,
-      isTyping: false
+      isTyping: false,
+      lastMessages: []
     })
   }
   //Login
