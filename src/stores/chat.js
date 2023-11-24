@@ -1,7 +1,17 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { collection, query, orderBy, addDoc, and, or, where, onSnapshot } from 'firebase/firestore'
+import {
+  collection,
+  query,
+  limit,
+  orderBy,
+  addDoc,
+  and,
+  or,
+  where,
+  onSnapshot
+} from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const user = ref({})
@@ -12,9 +22,9 @@ export const useChatStore = defineStore('chat', () => {
   //Генерация массива для отображения превью в списке слева
   const setChatPreviews = async () => {
     //Get all users except me
-    const q1 = query(collection(db, 'users'), where('email', '!=', user.value.email))
+    const q = query(collection(db, 'users'), where('email', '!=', user.value.email))
 
-    onSnapshot(q1, (snapshot) => {
+    onSnapshot(q, (snapshot) => {
       let users = []
       snapshot.forEach((user) => {
         users.push({ ...user.data(), id: user.id })
@@ -98,6 +108,40 @@ export const useChatStore = defineStore('chat', () => {
   const getCurrentUserNickname = computed(() => {
     return user.value.nickname
   })
+
+  //Получение последнего сообщения под ником юзера
+  const getLastMessage = computed(() => {
+    return async (chatId) => {
+      const q = query(
+        collection(db, 'messages'),
+        and(
+          or(where('fromUser', '==', user.value.id), where('toUser', '==', user.value.id)),
+          or(where('fromUser', '==', chatId), where('toUser', '==', chatId))
+        ),
+        orderBy('dateStamp', 'desc'),
+        limit(1)
+      )
+
+      return new Promise((resolve, reject) => {
+        onSnapshot(
+          q,
+          (snapshot) => {
+            let resultMessage = ''
+
+            snapshot.forEach((message) => {
+              resultMessage = message.data().text
+            })
+
+            resolve(resultMessage)
+          },
+          (error) => {
+            reject(error)
+          }
+        )
+      })
+    }
+  })
+
   return {
     //States
     chatPreviews,
@@ -106,6 +150,7 @@ export const useChatStore = defineStore('chat', () => {
 
     //Getters
     getCurrentUserNickname,
+    getLastMessage,
 
     //Actions
     setChatPreviews,
