@@ -22,7 +22,6 @@ export const useAuthStore = defineStore('auth', () => {
       password: userSignUpData.password,
       avatarBg,
       status: false,
-      isTyping: false,
       lastMessages: []
     })
   }
@@ -59,11 +58,7 @@ export const useAuthStore = defineStore('auth', () => {
     await setDoc(doc(db, 'users', storeChat.user.id), { isTyping: isTyping }, { merge: true })
   }
 
-  //GETTERS
-
   return {
-    //States
-    //Getters
     //Actions
     loginUser,
     registerUser,

@@ -1,17 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import {
-  collection,
-  query,
-  limit,
-  orderBy,
-  addDoc,
-  and,
-  or,
-  where,
-  onSnapshot
-} from 'firebase/firestore'
+import { collection, query, orderBy, addDoc, and, or, where, onSnapshot } from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const user = ref({})
@@ -91,11 +81,6 @@ export const useChatStore = defineStore('chat', () => {
       text: message,
       isRead: false
     })
-
-    await addDoc(collection(db, 'users'), {
-      id: user.value.id,
-      message
-    })
   }
 
   //Logout
@@ -109,40 +94,6 @@ export const useChatStore = defineStore('chat', () => {
     return user.value.nickname
   })
 
-  //Получение последнего сообщения под ником юзера
-  // const getLastMessage = computed(() => {
-  //   return async (chatId) => {
-  //     const q = query(
-  //       collection(db, 'messages'),
-  //       and(
-  //         or(where('fromUser', '==', user.value.id), where('toUser', '==', user.value.id)),
-  //         or(where('fromUser', '==', chatId), where('toUser', '==', chatId))
-  //       ),
-  //       orderBy('dateStamp', 'desc'),
-  //       limit(1)
-  //     )
-
-  //     return new Promise((resolve, reject) => {
-  //       onSnapshot(
-  //         q,
-  //         (snapshot) => {
-  //           console.log(snapshot)
-  //           let resultMessage = ''
-
-  //           snapshot.forEach((message) => {
-  //             resultMessage = message.data().text
-  //           })
-
-  //           resolve(resultMessage)
-  //         },
-  //         (error) => {
-  //           reject(error)
-  //         }
-  //       )
-  //     })
-  //   }
-  // })
-
   return {
     //States
     chatPreviews,
@@ -151,7 +102,6 @@ export const useChatStore = defineStore('chat', () => {
 
     //Getters
     getCurrentUserNickname,
-    // getLastMessage,
 
     //Actions
     setChatPreviews,

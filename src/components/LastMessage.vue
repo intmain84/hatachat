@@ -9,10 +9,7 @@ const storeChat = useChatStore()
 const lastMessage = ref('')
 
 const props = defineProps(['chat'])
-// Здесь реализуем получение последнего сообщения
-// 1) Сюда пропсами можно передать айдишник этого юзера, свой айдишник достать из глобального стейта
-// 2) Нужно здесь как-то запросить последнее сообщение из базы через пинью. Наверно вызывать функцию из Пиньи отсюда в onMounted
-// 3) Там эта функция будет содержать запрос в базу с фильтрацией и onSnapshot
+
 onMounted(async () => {
   const q = query(
     collection(db, 'messages'),
@@ -24,22 +21,10 @@ onMounted(async () => {
     limit(1)
   )
 
-  return new Promise((resolve, reject) => {
-    onSnapshot(
-      q,
-      (snapshot) => {
-        console.log(snapshot)
-
-        snapshot.forEach((message) => {
-          lastMessage.value = message.data().text
-        })
-
-        resolve()
-      },
-      (error) => {
-        reject(error)
-      }
-    )
+  onSnapshot(q, (snapshot) => {
+    snapshot.forEach((message) => {
+      lastMessage.value = message.data().text
+    })
   })
 })
 </script>

@@ -45,20 +45,6 @@ onBeforeMount(async () => {
   await storeChat.setChatPreviews()
   await handleVisibilityChange()
 })
-
-onMounted(() => {
-  if (document.hidden) {
-    userActive.value = false
-  } else {
-    userActive.value = true
-  }
-})
-
-watchEffect(() => {
-  return () => {
-    document.removeEventListener('visibilitychange', handleVisibilityChange)
-  }
-})
 </script>
 
 <template>
@@ -73,7 +59,7 @@ watchEffect(() => {
             v-for="chat in storeChat.chatPreviews"
             :key="chat.id"
             :chat="chat"
-            @click.stop="showChatRoom(chat.id)"
+            @click.prevent="showChatRoom(chat.id)"
             :class="{ activeChat: chat.id === route.params.chatId }"
           />
         </ul>
