@@ -110,37 +110,38 @@ export const useChatStore = defineStore('chat', () => {
   })
 
   //Получение последнего сообщения под ником юзера
-  const getLastMessage = computed(() => {
-    return async (chatId) => {
-      const q = query(
-        collection(db, 'messages'),
-        and(
-          or(where('fromUser', '==', user.value.id), where('toUser', '==', user.value.id)),
-          or(where('fromUser', '==', chatId), where('toUser', '==', chatId))
-        ),
-        orderBy('dateStamp', 'desc'),
-        limit(1)
-      )
+  // const getLastMessage = computed(() => {
+  //   return async (chatId) => {
+  //     const q = query(
+  //       collection(db, 'messages'),
+  //       and(
+  //         or(where('fromUser', '==', user.value.id), where('toUser', '==', user.value.id)),
+  //         or(where('fromUser', '==', chatId), where('toUser', '==', chatId))
+  //       ),
+  //       orderBy('dateStamp', 'desc'),
+  //       limit(1)
+  //     )
 
-      return new Promise((resolve, reject) => {
-        onSnapshot(
-          q,
-          (snapshot) => {
-            let resultMessage = ''
+  //     return new Promise((resolve, reject) => {
+  //       onSnapshot(
+  //         q,
+  //         (snapshot) => {
+  //           console.log(snapshot)
+  //           let resultMessage = ''
 
-            snapshot.forEach((message) => {
-              resultMessage = message.data().text
-            })
+  //           snapshot.forEach((message) => {
+  //             resultMessage = message.data().text
+  //           })
 
-            resolve(resultMessage)
-          },
-          (error) => {
-            reject(error)
-          }
-        )
-      })
-    }
-  })
+  //           resolve(resultMessage)
+  //         },
+  //         (error) => {
+  //           reject(error)
+  //         }
+  //       )
+  //     })
+  //   }
+  // })
 
   return {
     //States
@@ -150,7 +151,7 @@ export const useChatStore = defineStore('chat', () => {
 
     //Getters
     getCurrentUserNickname,
-    getLastMessage,
+    // getLastMessage,
 
     //Actions
     setChatPreviews,
