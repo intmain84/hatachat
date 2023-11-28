@@ -53,9 +53,13 @@ export const useAuthStore = defineStore('auth', () => {
     await setDoc(doc(db, 'users', storeChat.user.id), { status: userStatus }, { merge: true })
   }
 
-  //Checking if user typing right now
+  //Sending status to DB
   const isUserTyping = async (isTyping) => {
-    await setDoc(doc(db, 'users', storeChat.user.id), { isTyping: isTyping }, { merge: true })
+    let docId = 'sdJHUisgdf' + 'sdfs7df67sg'
+    await setDoc(doc(db, 'statuses', docID), { isTyping: isTyping }, { merge: true })
+    {
+      ;[userId1, false], [userId2, false]
+    }
   }
 
   return {

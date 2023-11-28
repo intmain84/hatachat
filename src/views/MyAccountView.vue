@@ -11,7 +11,7 @@ const router = useRouter()
 
 const logout = async () => {
   await storeAuth.changeUserStatus(false)
-  storeChat.logOut()
+  // storeChat.logOut()
   router.push({ name: 'home' })
 }
 </script>

@@ -28,7 +28,7 @@ const { chat } = toRefs(props)
           <div class="nickname">{{ chat.nickname }}</div>
           <div v-if="chat.nickname" class="message-info"></div>
         </div>
-        <div v-if="chat.isTyping" class="message-preview">Is typing...</div>
+        <StatusTyping :chat="chat" v-if="chat.isTyping" class="message-preview"></StatusTyping>
         <LastMessage :chat="chat" v-else class="message-preview"></LastMessage>
       </div>
     </a>
