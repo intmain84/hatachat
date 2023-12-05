@@ -3,6 +3,13 @@ import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import { storage } from '@/firebase'
+import { ref as fbRef, uploadBytes } from 'firebase/storage'
+
+const storageRef = fbRef(storage, 'avatars')
+uploadBytes(storageRef, file).then((snapshot) => {
+  console.log('Uploaded a blob or file!', snapshot)
+})
 
 const storeChat = useChatStore()
 const storeAuth = useAuthStore()
@@ -11,7 +18,6 @@ const router = useRouter()
 
 const logout = async () => {
   await storeAuth.changeUserStatus(false)
-  // storeChat.logOut()
   router.push({ name: 'home' })
 }
 </script>
