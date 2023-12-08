@@ -4,17 +4,28 @@ import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { storage } from '@/firebase'
+import { ref } from 'vue'
 import { ref as fbRef, uploadBytes } from 'firebase/storage'
 
 const storageRef = fbRef(storage, 'avatars')
-uploadBytes(storageRef, file).then((snapshot) => {
-  console.log('Uploaded a blob or file!', snapshot)
-})
 
 const storeChat = useChatStore()
 const storeAuth = useAuthStore()
 
 const router = useRouter()
+
+const myFileInputValue = ref(null)
+
+const getFileInputValue = (e) => {
+  //get the file input value
+  const file = e.target.files
+  //assign it to our reactive reference value
+  myFileInputValue.value = file[0]
+}
+
+// uploadBytes(storageRef, myFileInputValue.value).then((snapshot) => {
+//   console.log('Uploaded a blob or file!', snapshot)
+// })
 
 const logout = async () => {
   await storeAuth.changeUserStatus(false)
@@ -25,6 +36,7 @@ const logout = async () => {
 <template>
   <div class="myaccount">
     <form>
+      <input @change="getFileInputValue" type="file" name="file" id="fileInput" class="fileInput" />
       <img v-if="storeChat.user.avatar" class="avatar" :src="storeChat.user.avatar" />
       <div v-else class="avatar" :style="{ backgroundColor: storeChat.user.avatarBg }">
         {{ storeChat.user.nickname.charAt(0).toUpperCase() }}
@@ -60,6 +72,21 @@ const logout = async () => {
   height: 104px;
   border-radius: 100%;
   margin-bottom: 24px;
+}
+
+form {
+  display: flex;
+  position: relative;
+}
+
+form .fileInput {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+form .fileInput:hover {
+  cursor: pointer;
 }
 
 .email {
