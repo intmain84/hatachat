@@ -55,7 +55,7 @@ const onSubmit = async () => {
           class="mb-24"
         />
         <div class="form-controls">
-          <button class="btn" @click="onSubmit.prevent">Sign up</button>
+          <button class="btn" @click.prevent="onSubmit">Sign up</button>
           <RouterLink to="/">I have an account</RouterLink>
         </div>
       </form>

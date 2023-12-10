@@ -21,8 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
       nickname: userSignUpData.nickname,
       password: userSignUpData.password,
       avatarBg,
-      status: false,
-      lastMessages: []
+      status: false
     })
   }
   //Login
