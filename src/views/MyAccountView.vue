@@ -2,7 +2,7 @@
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { storage } from '@/firebase'
 import { ref, onMounted } from 'vue'
 import { ref as fbRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
@@ -11,7 +11,6 @@ const storeChat = useChatStore()
 const storeAuth = useAuthStore()
 
 const router = useRouter()
-const route = useRoute()
 
 let storageRef = null
 
@@ -20,11 +19,12 @@ onMounted(() => {
 })
 
 const myFileInputValue = ref(null)
-const uploadingProgress = ref(null)
+const uploadingProgress = ref({
+  progress: 0
+})
 const uploadTask = ref(null)
 
 const getFileInputValue = (e) => {
-  console.log(route.params)
   //get the file input value
   const file = e.target.files
   //assign it to our reactive reference value
@@ -41,13 +41,14 @@ const getFileInputValue = (e) => {
     (snapshot) => {
       // Observe state change events such as progress, pause, and resume
       // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      uploadingProgress.value = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      uploadingProgress.value.progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
       switch (snapshot.state) {
         case 'paused':
-          console.log('Upload is paused')
+          uploadingProgress.value.status = 'Paused'
           break
         case 'running':
-          console.log('Upload is running')
+          console.log('Upload')
+          uploadingProgress.value.status = 'Uploading...'
           break
       }
     },
@@ -58,8 +59,7 @@ const getFileInputValue = (e) => {
       // Handle successful uploads on complete
       // For instance, get the download URL: https://firebasestorage.googleapis.com/...
       getDownloadURL(uploadTask.value.snapshot.ref).then((downloadURL) => {
-        //Здесь нужно отправить этот урл в chatStore и там записать урл в поле юзера в таблице юзеров
-        console.log(downloadURL)
+        storeAuth.postAvatar(downloadURL)
       })
     }
   )
@@ -87,7 +87,18 @@ const logout = async () => {
         {{ storeChat.user.nickname.charAt(0).toUpperCase() }}
       </div>
     </form>
-    {{ Math.round(uploadingProgress) }}
+    <div class="uploadingProgress">
+      {{
+        uploadingProgress.progress === 0 || uploadingProgress.progress === 100
+          ? ''
+          : Math.round(uploadingProgress.progress)
+      }}
+      {{
+        uploadingProgress.progress === 0 || uploadingProgress.progress === 100
+          ? ''
+          : uploadingProgress.status
+      }}
+    </div>
     <h1 class="mb-16">{{ storeChat.getCurrentUserNickname }}</h1>
     <div class="email mb-24">{{ storeChat.user.email }}</div>
     <button class="btn" @click.prevent="logout">
@@ -133,6 +144,10 @@ form .fileInput {
 
 form .fileInput:hover {
   cursor: pointer;
+}
+
+.uploadingProgress {
+  color: #fff;
 }
 
 .email {
