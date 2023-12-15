@@ -1,16 +1,6 @@
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import {
-  query,
-  and,
-  onSnapshot,
-  where,
-  getDocs,
-  setDoc,
-  doc,
-  addDoc,
-  collection
-} from 'firebase/firestore'
+import { query, and, where, getDocs, setDoc, doc, addDoc, collection } from 'firebase/firestore'
 import { useChatStore } from './chat'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -44,16 +34,16 @@ export const useAuthStore = defineStore('auth', () => {
       )
     )
 
-    // if (querySnapshot.size == 0) throw Error('Invalid email or password')
+    const querySnapshot = await getDocs(q)
 
-    onSnapshot(q, (snapshot) => {
-      snapshot.forEach((userFromBd) => {
-        storeChat.user.id = userFromBd.id
-        storeChat.user.email = userFromBd.data().email
-        storeChat.user.nickname = userFromBd.data().nickname
-        storeChat.user.avatarBg = userFromBd.data().avatarBg
-        storeChat.user.avatar = userFromBd.data().avatar
-      })
+    if (querySnapshot.size == 0) throw Error('Invalid email or password')
+
+    querySnapshot.forEach((userFromBd) => {
+      storeChat.user.id = userFromBd.id
+      storeChat.user.email = userFromBd.data().email
+      storeChat.user.nickname = userFromBd.data().nickname
+      storeChat.user.avatarBg = userFromBd.data().avatarBg
+      storeChat.user.avatar = userFromBd.data().avatar
     })
   }
 
