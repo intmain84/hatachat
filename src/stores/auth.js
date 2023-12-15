@@ -1,6 +1,16 @@
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { query, and, where, getDocs, setDoc, doc, addDoc, collection } from 'firebase/firestore'
+import {
+  query,
+  and,
+  onSnapshot,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+  addDoc,
+  collection
+} from 'firebase/firestore'
 import { useChatStore } from './chat'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -34,16 +44,16 @@ export const useAuthStore = defineStore('auth', () => {
       )
     )
 
-    const querySnapshot = await getDocs(q)
+    // if (querySnapshot.size == 0) throw Error('Invalid email or password')
 
-    if (querySnapshot.size == 0) throw Error('Invalid email or password')
-
-    querySnapshot.forEach((userFromBd) => {
-      storeChat.user.id = userFromBd.id
-      storeChat.user.email = userFromBd.data().email
-      storeChat.user.nickname = userFromBd.data().nickname
-      storeChat.user.avatarBg = userFromBd.data().avatarBg
-      storeChat.user.avatar = userFromBd.data().avatar
+    onSnapshot(q, (snapshot) => {
+      snapshot.forEach((userFromBd) => {
+        storeChat.user.id = userFromBd.id
+        storeChat.user.email = userFromBd.data().email
+        storeChat.user.nickname = userFromBd.data().nickname
+        storeChat.user.avatarBg = userFromBd.data().avatarBg
+        storeChat.user.avatar = userFromBd.data().avatar
+      })
     })
   }
 
@@ -55,10 +65,15 @@ export const useAuthStore = defineStore('auth', () => {
   //Sending status to DB
   const isUserTyping = async (isTyping) => {
     let docId = 'sdJHUisgdf' + 'sdfs7df67sg'
-    await setDoc(doc(db, 'statuses', docID), { isTyping: isTyping }, { merge: true })
+    await setDoc(doc(db, 'statuses', docId), { isTyping: isTyping }, { merge: true })
     {
       ;[userId1, false], [userId2, false]
     }
+  }
+
+  //Change user status
+  const postAvatar = (downloadURL) => {
+    setDoc(doc(db, 'users', storeChat.user.id), { avatar: downloadURL }, { merge: true })
   }
 
   return {
@@ -66,6 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
     loginUser,
     registerUser,
     isUserTyping,
-    changeUserStatus
+    changeUserStatus,
+    postAvatar
   }
 })

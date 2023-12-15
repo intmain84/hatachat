@@ -87,7 +87,7 @@ const logout = async () => {
         {{ storeChat.user.nickname.charAt(0).toUpperCase() }}
       </div>
     </form>
-    <div class="uploadingProgress">
+    <!-- <div class="uploadingProgress">
       {{
         uploadingProgress.progress === 0 || uploadingProgress.progress === 100
           ? ''
@@ -98,7 +98,7 @@ const logout = async () => {
           ? ''
           : uploadingProgress.status
       }}
-    </div>
+    </div> -->
     <h1 class="mb-16">{{ storeChat.getCurrentUserNickname }}</h1>
     <div class="email mb-24">{{ storeChat.user.email }}</div>
     <button class="btn" @click.prevent="logout">
