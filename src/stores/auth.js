@@ -1,6 +1,16 @@
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { query, and, where, getDocs, setDoc, doc, addDoc, collection } from 'firebase/firestore'
+import {
+  query,
+  and,
+  where,
+  getDocs,
+  getDoc,
+  setDoc,
+  doc,
+  addDoc,
+  collection
+} from 'firebase/firestore'
 import { useChatStore } from './chat'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -62,12 +72,17 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   //Change user status
-  const postAvatar = (downloadURL) => {
-    setDoc(doc(db, 'users', storeChat.user.id), { avatar: downloadURL }, { merge: true })
+  const postAvatar = async (imageUrl) => {
+    setDoc(doc(db, 'users', storeChat.user.id), { avatar: imageUrl }, { merge: true })
+
+    const docRef = doc(db, 'users', storeChat.user.id)
+    const docSnap = await getDoc(docRef)
+
+    storeChat.user.avatar = docSnap.data().avatar
   }
 
   return {
-    //Actions
+    //ActionsDocumentSnapshot
     loginUser,
     registerUser,
     isUserTyping,

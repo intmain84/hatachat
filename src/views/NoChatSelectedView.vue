@@ -8,7 +8,7 @@ const storeChat = useChatStore()
     <div class="avatars-block">
       <img v-if="storeChat.user.avatar" class="avatar" :src="storeChat.user.avatar" />
       <div v-else class="avatar" :style="{ backgroundColor: storeChat.user.avatarBg }">
-        <!-- {{ storeChat.user.nickname.charAt(0).toUpperCase() }} -->
+        {{ storeChat.user.nickname.charAt(0).toUpperCase() }}
       </div>
     </div>
     <h1 class="mb-16">Hey, {{ storeChat.getCurrentUserNickname + '😀' }}!</h1>

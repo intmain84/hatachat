@@ -1,10 +1,11 @@
 <script setup>
+import VuePictureCropper, { cropper } from 'vue-picture-cropper'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { storage } from '@/firebase'
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { ref as fbRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 
 const storeChat = useChatStore()
@@ -19,52 +20,50 @@ onMounted(() => {
 })
 
 const myFileInputValue = ref(null)
+const uploadInput = ref(null)
+const pic = ref('')
+const result = reactive({
+  dataURL: '',
+  blobURL: ''
+})
 const uploadingProgress = ref({
   progress: 0
 })
 const uploadTask = ref(null)
 
+const display = ref('none')
+
 const getFileInputValue = (e) => {
+  pic.value = ''
+  result.dataURL = ''
+  result.blobURL = ''
   //get the file input value
-  const file = e.target.files
+  const files = e.target.files
   //assign it to our reactive reference value
-  myFileInputValue.value = file[0]
+  myFileInputValue.value = files[0]
 
-  uploadTask.value = uploadBytesResumable(storageRef, myFileInputValue.value)
+  const reader = new FileReader()
 
-  // Register three observers:
-  // 1. 'state_changed' observer, called any time the state changes
-  // 2. Error observer, called on failure
-  // 3. Completion observer, called on successful completion
-  uploadTask.value.on(
-    'state_changed',
-    (snapshot) => {
-      // Observe state change events such as progress, pause, and resume
-      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      uploadingProgress.value.progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-      switch (snapshot.state) {
-        case 'paused':
-          uploadingProgress.value.status = 'Paused'
-          break
-        case 'running':
-          console.log('Upload')
-          uploadingProgress.value.status = 'Uploading...'
-          break
-      }
-    },
-    (error) => {
-      alert(error)
-    },
-    () => {
-      // Handle successful uploads on complete
-      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-      getDownloadURL(uploadTask.value.snapshot.ref).then((downloadURL) => {
-        storeAuth.postAvatar(downloadURL)
-      })
-    }
-  )
+  reader.readAsDataURL(myFileInputValue.value)
+
+  reader.onload = () => {
+    pic.value = String(reader.result)
+    display.value = 'flex'
+    if (!uploadInput.value) return
+    uploadInput.value.value = ''
+  }
 }
 
+//Finish cropping and sending image to the server
+const getResult = async () => {
+  if (!cropper) return
+  const base64 = cropper.getDataURL()
+  result.dataURL = base64
+  await storeAuth.postAvatar(result.dataURL)
+  display.value = 'none'
+}
+
+//Log Out of the app
 const logout = async () => {
   await storeAuth.changeUserStatus(false)
   router.push({ name: 'home' })
@@ -72,15 +71,43 @@ const logout = async () => {
 </script>
 
 <template>
+  <!-- Modal -->
+  <div
+    id="cropModal"
+    class="cropModal"
+    :style="{ display: display }"
+    @click.self="display = 'none'"
+  >
+    <div class="cropModal-content">
+      <span class="close" @click="display = 'none'">&times;</span>
+      <VuePictureCropper
+        :boxStyle="{
+          width: '400px',
+          backgroundColor: '#1e212a',
+          margin: 'auto'
+        }"
+        :img="pic"
+        :options="{
+          viewMode: 1,
+          dragMode: 'crop',
+          aspectRatio: 1 / 1
+        }"
+        @ready="ready"
+      />
+      <button class="btn mt-24" @click="getResult">Submit</button>
+    </div>
+  </div>
+  <!--  -->
   <div class="myaccount">
     <form>
       <input
+        ref="uploadInput"
         @change="getFileInputValue"
         type="file"
         name="file"
         id="fileInput"
         class="fileInput"
-        accept=".jpg, .png"
+        accept="image/jpg, image/jpeg, image/png, image/gif"
       />
       <img v-if="storeChat.user.avatar" class="avatar" :src="storeChat.user.avatar" />
       <div v-else class="avatar" :style="{ backgroundColor: storeChat.user.avatarBg }">
@@ -156,4 +183,50 @@ form .fileInput:hover {
 .icon {
   margin-left: 4px;
 }
+
+/* The Modal (background) */
+.cropModal {
+  justify-content: center;
+  align-items: center;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(24, 26, 34); /* Fallback color */
+  background-color: rgba(11, 12, 15, 0.8); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.cropModal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #2f3341;
+  margin: 1% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border-radius: 9px;
+  width: 90%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* The Modal (background) End */
 </style>

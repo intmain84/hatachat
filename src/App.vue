@@ -63,6 +63,14 @@ p {
   margin-bottom: 16px;
 }
 
+.mt-24 {
+  margin-top: 24px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
 .icon24 {
   width: 24px;
   height: 24px;
