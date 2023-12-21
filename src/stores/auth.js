@@ -66,12 +66,9 @@ export const useAuthStore = defineStore('auth', () => {
   const isUserTyping = async (isTyping) => {
     let docId = 'sdJHUisgdf' + 'sdfs7df67sg'
     await setDoc(doc(db, 'statuses', docId), { isTyping: isTyping }, { merge: true })
-    {
-      ;[userId1, false], [userId2, false]
-    }
   }
 
-  //Change user status
+  //Update user avatar
   const postAvatar = async (imageUrl) => {
     setDoc(doc(db, 'users', storeChat.user.id), { avatar: imageUrl }, { merge: true })
 
