@@ -4,20 +4,20 @@ import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
-import { storage } from '@/firebase'
-import { ref, reactive, onMounted } from 'vue'
-import { ref as fbRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+// import { storage } from '@/firebase'
+import { ref, reactive } from 'vue'
+// import { ref as fbRef } from 'firebase/storage'
 
 const storeChat = useChatStore()
 const storeAuth = useAuthStore()
 
 const router = useRouter()
 
-let storageRef = null
+// let storageRef = null
 
-onMounted(() => {
-  storageRef = fbRef(storage, `avatars/avatar${storeChat.user.id}`)
-})
+// onMounted(() => {
+//   storageRef = fbRef(storage, `avatars/avatar${storeChat.user.id}`)
+// })
 
 const myFileInputValue = ref(null)
 const uploadInput = ref(null)
@@ -26,10 +26,10 @@ const result = reactive({
   dataURL: '',
   blobURL: ''
 })
-const uploadingProgress = ref({
-  progress: 0
-})
-const uploadTask = ref(null)
+// const uploadingProgress = ref({
+//   progress: 0
+// })
+// const uploadTask = ref(null)
 
 const display = ref('none')
 
