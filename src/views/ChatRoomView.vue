@@ -1,7 +1,8 @@
 <script setup>
 import MessageBubble from '@/components/MessageBubble.vue'
-import { FaceSmileIcon } from '@heroicons/vue/24/outline'
-import { PaperAirplaneIcon } from '@heroicons/vue/24/outline'
+import { ArrowUturnLeftIcon } from '@heroicons/vue/24/outline'
+import { ArrowUpRightIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon } from '@heroicons/vue/24/outline'
 
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { useChatStore } from '@/stores/chat'
@@ -39,9 +40,54 @@ const sendMessage = () => {
   messageInput.value.blur()
 }
 
+//Запрещаем браузерное контекстное меню
+// document.addEventListener('contextmenu', (event) => {
+//   event.preventDefault()
+// })
+
+const modal = document.getElementById('bubbleContext')
+
+//! Закончить это
+if (showBubbleContext.value === 'flex') {
+  window.addEventListener('click', function (event) {
+    if (event.target !== modal) {
+      showBubbleContext.value = 'none'
+    }
+  })
+}
+
 const getUserInfo = computed(() => {
   return storeChat.chatPreviews.find((chat) => chat.id === route.params.chatId)
 })
+
+//Bubble context menu
+const bubbleContextInfo = ref({
+  pageY: 0,
+  pageX: 0
+})
+
+const showBubbleContext = ref('none')
+
+const bubbleContext = (event) => {
+  //Setting context menu coordinates
+  const boundaryX = window.innerWidth - event.pageX
+  const boundaryY = window.innerHeight - event.pageY
+
+  if (boundaryX <= 158) {
+    bubbleContextInfo.value.pageX = event.pageX - 158 - 5
+  } else {
+    bubbleContextInfo.value.pageX = event.pageX + 5
+  }
+
+  if (boundaryY <= 128) {
+    bubbleContextInfo.value.pageY = event.pageY - 128 - 5
+  } else {
+    bubbleContextInfo.value.pageY = event.pageY + 5
+  }
+
+  //Show context
+  showBubbleContext.value = 'flex'
+}
 
 onBeforeMount(async () => {
   getCurrentDate()
@@ -104,6 +150,24 @@ const stopTyping = async () => {
       </div>
     </header>
 
+    <Teleport to="body">
+      <div
+        id="bubbleContext"
+        class="bubbleContext"
+        :style="{
+          display: showBubbleContext,
+          left: bubbleContextInfo.pageX + 'px',
+          top: bubbleContextInfo.pageY + 'px'
+        }"
+      >
+        <ul>
+          <li><ArrowUturnLeftIcon class="icon icon24" /> <span>Reply</span></li>
+          <li><ArrowUpRightIcon class="icon icon24" /> <span>Forward</span></li>
+          <li class="red-text"><TrashIcon class="icon icon24" /> <span>Delete</span></li>
+        </ul>
+      </div>
+    </Teleport>
+
     <div class="messages-container">
       <div class="messages-group" v-for="msg in reversedMessages" :key="msg.id">
         <div class="messages-date">
@@ -115,6 +179,7 @@ const stopTyping = async () => {
           :text="msg.text"
           :time="msg.createdAtTime"
           :class="[msg.fromUser === storeChat.user.id ? 'message-right' : 'message-left']"
+          @click.right="bubbleContext($event)"
         />
       </div>
     </div>
@@ -157,6 +222,45 @@ const stopTyping = async () => {
   font-size: 0.75rem;
   box-shadow: 0px 4px 7px 0px rgba(0, 0, 0, 0.12);
   z-index: 2;
+}
+
+.bubbleContext {
+  position: absolute;
+  background: var(--dark-elements);
+  border-radius: 8px;
+  padding: 4px 0;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1rem;
+  box-shadow: 0px 4px 7px 0px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+}
+
+.bubbleContext ul,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bubbleContext li {
+  display: flex;
+  padding: 8px;
+  padding-right: 56px;
+}
+
+.bubbleContext li .icon {
+  margin-right: 8px;
+}
+
+.bubbleContext li span {
+  display: flex;
+  align-items: center;
+}
+
+.bubbleContext li:hover {
+  cursor: pointer;
+  background-color: var(--darker-background);
 }
 
 .user-chat-header .user-preview {

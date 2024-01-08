@@ -76,6 +76,10 @@ p {
   height: 24px;
 }
 
+.red-text {
+  color: rgb(231, 68, 68);
+}
+
 input[type='text'],
 input[type='email'],
 input[type='password'] {
