@@ -4,20 +4,12 @@ import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
-// import { storage } from '@/firebase'
 import { ref, reactive } from 'vue'
-// import { ref as fbRef } from 'firebase/storage'
 
 const storeChat = useChatStore()
 const storeAuth = useAuthStore()
 
 const router = useRouter()
-
-// let storageRef = null
-
-// onMounted(() => {
-//   storageRef = fbRef(storage, `avatars/avatar${storeChat.user.id}`)
-// })
 
 const myFileInputValue = ref(null)
 const uploadInput = ref(null)
@@ -26,10 +18,6 @@ const result = reactive({
   dataURL: '',
   blobURL: ''
 })
-// const uploadingProgress = ref({
-//   progress: 0
-// })
-// const uploadTask = ref(null)
 
 const display = ref('none')
 
@@ -114,18 +102,6 @@ const logout = async () => {
         {{ storeChat.user.nickname.charAt(0).toUpperCase() }}
       </div>
     </form>
-    <!-- <div class="uploadingProgress">
-      {{
-        uploadingProgress.progress === 0 || uploadingProgress.progress === 100
-          ? ''
-          : Math.round(uploadingProgress.progress)
-      }}
-      {{
-        uploadingProgress.progress === 0 || uploadingProgress.progress === 100
-          ? ''
-          : uploadingProgress.status
-      }}
-    </div> -->
     <h1 class="mb-16">{{ storeChat.getCurrentUserNickname }}</h1>
     <div class="email mb-24">{{ storeChat.user.email }}</div>
     <button class="btn" @click.prevent="logout">

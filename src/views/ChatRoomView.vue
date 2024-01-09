@@ -4,7 +4,7 @@ import { ArrowUturnLeftIcon } from '@heroicons/vue/24/outline'
 import { ArrowUpRightIcon } from '@heroicons/vue/24/outline'
 import { TrashIcon } from '@heroicons/vue/24/outline'
 
-import { ref, computed, watch, onBeforeMount } from 'vue'
+import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
 import { useRoute } from 'vue-router'
@@ -45,17 +45,6 @@ const sendMessage = () => {
 //   event.preventDefault()
 // })
 
-const modal = document.getElementById('bubbleContext')
-
-//! Закончить это
-if (showBubbleContext.value === 'flex') {
-  window.addEventListener('click', function (event) {
-    if (event.target !== modal) {
-      showBubbleContext.value = 'none'
-    }
-  })
-}
-
 const getUserInfo = computed(() => {
   return storeChat.chatPreviews.find((chat) => chat.id === route.params.chatId)
 })
@@ -66,9 +55,12 @@ const bubbleContextInfo = ref({
   pageX: 0
 })
 
+let bubbleContextMenu = ''
 const showBubbleContext = ref('none')
+let msgId = ref('')
 
-const bubbleContext = (event) => {
+const handleBubbleContext = (event, id) => {
+  msgId.value = id
   //Setting context menu coordinates
   const boundaryX = window.innerWidth - event.pageX
   const boundaryY = window.innerHeight - event.pageY
@@ -85,8 +77,23 @@ const bubbleContext = (event) => {
     bubbleContextInfo.value.pageY = event.pageY + 5
   }
 
-  //Show context
+  //Initiate listener for closing context menu
+  document.addEventListener('click', closeContextMenu)
+
+  //Show context menu
   showBubbleContext.value = 'flex'
+}
+
+const closeContextMenu = () => {
+  showBubbleContext.value = 'none'
+  document.removeEventListener('click', closeContextMenu)
+}
+
+//Delete message
+const deleteMessage = async (messageId) => {
+  //! ПРОДОЛЖИТЬ функционал в сторе
+  await storeChat.deleteMessage(messageId)
+  //document.removeEventListener('click', closeContextMenu)
 }
 
 onBeforeMount(async () => {
@@ -98,8 +105,12 @@ onBeforeMount(async () => {
   }
 })
 
+onMounted(() => {
+  bubbleContextMenu = document.getElementById('bubbleContext')
+})
+
 watch(
-  () => route.params.chatId, //Сначала было просто route.params и при нажатии происходило дублирование запросов в роутах
+  () => route.params.chatId,
   async () => {
     getCurrentDate()
 
@@ -134,6 +145,26 @@ const stopTyping = async () => {
 </script>
 
 <template>
+  <Teleport to="body">
+    <div
+      id="bubbleContext"
+      class="bubbleContext"
+      :style="{
+        display: showBubbleContext,
+        left: bubbleContextInfo.pageX + 'px',
+        top: bubbleContextInfo.pageY + 'px'
+      }"
+    >
+      <ul>
+        <li><ArrowUturnLeftIcon class="icon icon24" /> <span>Reply</span></li>
+        <li><ArrowUpRightIcon class="icon icon24" /> <span>Forward</span></li>
+        <li class="red-text" @click="deleteMessage(msgId)">
+          <TrashIcon class="icon icon24" />
+          <span>Delete</span>
+        </li>
+      </ul>
+    </div>
+  </Teleport>
   <div class="chat-room">
     <header class="user-chat-header">
       <div class="user-preview">
@@ -150,24 +181,6 @@ const stopTyping = async () => {
       </div>
     </header>
 
-    <Teleport to="body">
-      <div
-        id="bubbleContext"
-        class="bubbleContext"
-        :style="{
-          display: showBubbleContext,
-          left: bubbleContextInfo.pageX + 'px',
-          top: bubbleContextInfo.pageY + 'px'
-        }"
-      >
-        <ul>
-          <li><ArrowUturnLeftIcon class="icon icon24" /> <span>Reply</span></li>
-          <li><ArrowUpRightIcon class="icon icon24" /> <span>Forward</span></li>
-          <li class="red-text"><TrashIcon class="icon icon24" /> <span>Delete</span></li>
-        </ul>
-      </div>
-    </Teleport>
-
     <div class="messages-container">
       <div class="messages-group" v-for="msg in reversedMessages" :key="msg.id">
         <div class="messages-date">
@@ -176,10 +189,11 @@ const stopTyping = async () => {
         <MessageBubble
           v-for="msg in msg[1]"
           :key="msg.id"
+          :id="msg.id"
           :text="msg.text"
           :time="msg.createdAtTime"
           :class="[msg.fromUser === storeChat.user.id ? 'message-right' : 'message-left']"
-          @click.right="bubbleContext($event)"
+          @getMessageId="handleBubbleContext"
         />
       </div>
     </div>
