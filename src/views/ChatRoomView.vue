@@ -63,7 +63,6 @@ let fromUserId = ref('')
 const handleBubbleContext = (event, id, userId) => {
   msgId.value = id
   fromUserId.value = userId
-  console.log(fromUserId.value)
   //Setting context menu coordinates
   const boundaryX = window.innerWidth - event.pageX
   const boundaryY = window.innerHeight - event.pageY
