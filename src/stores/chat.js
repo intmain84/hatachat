@@ -1,7 +1,18 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { db } from '../firebase'
-import { collection, query, orderBy, addDoc, and, or, where, onSnapshot } from 'firebase/firestore'
+import {
+  collection,
+  query,
+  orderBy,
+  addDoc,
+  deleteDoc,
+  doc,
+  and,
+  or,
+  where,
+  onSnapshot
+} from 'firebase/firestore'
 
 export const useChatStore = defineStore('chat', () => {
   const user = ref({})
@@ -83,6 +94,15 @@ export const useChatStore = defineStore('chat', () => {
     })
   }
 
+  //Message delete
+  const deleteMessage = async (messageId) => {
+    try {
+      await deleteDoc(doc(db, 'messages', messageId))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   //Logout
   const logOut = () => {
     user.value = {}
@@ -107,6 +127,7 @@ export const useChatStore = defineStore('chat', () => {
     setChatPreviews,
     setMsgGroups,
     sendMessage,
+    deleteMessage,
     logOut
   }
 })

@@ -1,9 +1,12 @@
 <script setup>
-const props = defineProps(['id', 'nickname', 'text', 'time'])
+const props = defineProps(['id', 'nickname', 'text', 'time', 'fromUser'])
 </script>
 
 <template>
-  <div class="message-container" @click.right="$emit('getMessageId', $event, props.id)">
+  <div
+    class="message-container"
+    @click.right="$emit('getMessageId', $event, props.id, props.fromUser)"
+  >
     <div class="nickname">{{ props.nickname }}</div>
     <div class="message">{{ props.text }}</div>
     <div class="time">{{ props.time }}</div>

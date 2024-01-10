@@ -41,9 +41,9 @@ const sendMessage = () => {
 }
 
 //Запрещаем браузерное контекстное меню
-// document.addEventListener('contextmenu', (event) => {
-//   event.preventDefault()
-// })
+document.addEventListener('contextmenu', (event) => {
+  event.preventDefault()
+})
 
 const getUserInfo = computed(() => {
   return storeChat.chatPreviews.find((chat) => chat.id === route.params.chatId)
@@ -58,9 +58,12 @@ const bubbleContextInfo = ref({
 let bubbleContextMenu = ''
 const showBubbleContext = ref('none')
 let msgId = ref('')
+let fromUserId = ref('')
 
-const handleBubbleContext = (event, id) => {
+const handleBubbleContext = (event, id, userId) => {
   msgId.value = id
+  fromUserId.value = userId
+  console.log(fromUserId.value)
   //Setting context menu coordinates
   const boundaryX = window.innerWidth - event.pageX
   const boundaryY = window.innerHeight - event.pageY
@@ -93,7 +96,6 @@ const closeContextMenu = () => {
 const deleteMessage = async (messageId) => {
   //! ПРОДОЛЖИТЬ функционал в сторе
   await storeChat.deleteMessage(messageId)
-  //document.removeEventListener('click', closeContextMenu)
 }
 
 onBeforeMount(async () => {
@@ -158,7 +160,11 @@ const stopTyping = async () => {
       <ul>
         <li><ArrowUturnLeftIcon class="icon icon24" /> <span>Reply</span></li>
         <li><ArrowUpRightIcon class="icon icon24" /> <span>Forward</span></li>
-        <li class="red-text" @click="deleteMessage(msgId)">
+        <li
+          v-if="fromUserId && fromUserId === storeChat.user.id"
+          class="red-text"
+          @click="deleteMessage(msgId, fromUserId)"
+        >
           <TrashIcon class="icon icon24" />
           <span>Delete</span>
         </li>
@@ -190,6 +196,7 @@ const stopTyping = async () => {
           v-for="msg in msg[1]"
           :key="msg.id"
           :id="msg.id"
+          :fromUser="msg.fromUser"
           :text="msg.text"
           :time="msg.createdAtTime"
           :class="[msg.fromUser === storeChat.user.id ? 'message-right' : 'message-left']"
