@@ -7,6 +7,7 @@ import { ref, onMounted } from 'vue'
 const storeChat = useChatStore()
 
 const lastMessage = ref('')
+const messageFromUser = ref('')
 
 const props = defineProps(['chat'])
 
@@ -24,13 +25,16 @@ onMounted(async () => {
   onSnapshot(q, (snapshot) => {
     snapshot.forEach((message) => {
       lastMessage.value = message.data().text
+      messageFromUser.value = message.data().fromUser
     })
   })
 })
 </script>
 
 <template>
-  <div>{{ lastMessage }}</div>
+  <div>
+    {{ messageFromUser === storeChat.user.id ? 'You' : props.chat.nickname }}: {{ lastMessage }}
+  </div>
 </template>
 
 <style scoped></style>

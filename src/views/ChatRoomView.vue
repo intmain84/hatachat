@@ -136,12 +136,12 @@ const reversedMessages = computed(() => {
 
 const startTyping = async () => {
   isFieldActive.value = true
-  await storeAuth.isUserTyping(isFieldActive.value)
+  await storeAuth.isUserTyping(props.chatId, storeChat.user.id, isFieldActive.value)
 }
 
 const stopTyping = async () => {
   isFieldActive.value = false
-  await storeAuth.isUserTyping(isFieldActive.value)
+  await storeAuth.isUserTyping(props.chatId, storeChat.user.id, isFieldActive.value)
 }
 </script>
 

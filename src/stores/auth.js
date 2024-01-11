@@ -63,8 +63,9 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   //Sending status to DB
-  const isUserTyping = async (isTyping) => {
-    let docId = 'sdJHUisgdf' + 'sdfs7df67sg'
+  const isUserTyping = async (toUser, fromCurrentUser, isTyping) => {
+    let docId = toUser + fromCurrentUser
+    //! нужно наверно передавать не isTyping а fromCurrentUser, потом уже на фронте проверять кому этот айдишник пренадлежит. Если мне то ничего не показывать, если собеседнику то показывать isTyping
     await setDoc(doc(db, 'statuses', docId), { isTyping: isTyping }, { merge: true })
   }
 

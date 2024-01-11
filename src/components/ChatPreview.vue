@@ -28,8 +28,9 @@ const { chat } = toRefs(props)
           <div class="nickname">{{ chat.nickname }}</div>
           <div v-if="chat.nickname" class="message-info"></div>
         </div>
-        <StatusTyping :chat="chat" v-if="chat.isTyping" class="message-preview"></StatusTyping>
-        <LastMessage :chat="chat" v-else class="message-preview"></LastMessage>
+        <!-- Тут нужно вытаскивать isTyping из коллекции statuses. Сейчас тут он достается из коллекции users, но там его нет -->
+        <!-- <StatusTyping :chat="chat" v-if="chat.isTyping" class="message-preview"></StatusTyping> -->
+        <LastMessage :chat="chat" class="message-preview"></LastMessage>
       </div>
     </a>
   </li>
