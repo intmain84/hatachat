@@ -1,6 +1,9 @@
 <script setup>
 import LastMessage from '@/components/LastMessage.vue'
 import { toRefs } from 'vue'
+import { useChatStore } from '@/stores/chat'
+
+const storeChat = useChatStore()
 
 const props = defineProps({
   chat: {
@@ -29,7 +32,12 @@ const { chat } = toRefs(props)
           <div v-if="chat.nickname" class="message-info"></div>
         </div>
         <!-- Тут нужно вытаскивать isTyping из коллекции statuses. Сейчас тут он достается из коллекции users, но там его нет -->
-        <!-- <StatusTyping :chat="chat" v-if="chat.isTyping" class="message-preview"></StatusTyping> -->
+        <!-- <StatusTyping
+          v-if="storeChat.user.typesNow.includes(chat.id)"
+          class="message-preview"
+        ></StatusTyping> -->
+        <!-- ПОХОДУ ОН НЕ ДОСТАЕТ ИНФУ О ТЕКУЩЕМ ЮЗЕРЕ В РЕАЛЬНОМ ВРЕМЕНИ И НАДО КАК В LastMessage делать onSnapshot И ВЫТАСКИВАТЬ typesNow В РЕАЛ ТАЙМЕ -->
+        <div>{{ storeChat.user.typesNow }}</div>
         <LastMessage :chat="chat" class="message-preview"></LastMessage>
       </div>
     </a>
