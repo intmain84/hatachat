@@ -1,6 +1,8 @@
 <script setup>
+import { db } from '../firebase'
+import { doc, onSnapshot } from 'firebase/firestore'
 import LastMessage from '@/components/LastMessage.vue'
-import { toRefs } from 'vue'
+import { ref, toRefs, onMounted } from 'vue'
 import { useChatStore } from '@/stores/chat'
 
 const storeChat = useChatStore()
@@ -12,7 +14,17 @@ const props = defineProps({
   }
 }) //chat приходит из ChatListView.vue
 
+let typesMessage = ref('')
 const { chat } = toRefs(props)
+
+onMounted(async () => {
+  onSnapshot(doc(db, 'users', storeChat.user.id), (doc) => {
+    // if (doc.data().typesNow.includes(chat.id)) { }
+    ;[typesMessage.value] = doc.data().typesNow.length
+      ? doc.data().typesNow.filter((id) => id === chat.value.id)
+      : ''
+  })
+})
 </script>
 
 <template>
@@ -37,8 +49,8 @@ const { chat } = toRefs(props)
           class="message-preview"
         ></StatusTyping> -->
         <!-- ПОХОДУ ОН НЕ ДОСТАЕТ ИНФУ О ТЕКУЩЕМ ЮЗЕРЕ В РЕАЛЬНОМ ВРЕМЕНИ И НАДО КАК В LastMessage делать onSnapshot И ВЫТАСКИВАТЬ typesNow В РЕАЛ ТАЙМЕ -->
-        <div>{{ storeChat.user.typesNow }}</div>
-        <LastMessage :chat="chat" class="message-preview"></LastMessage>
+        <div v-if="typesMessage">is typing...</div>
+        <LastMessage v-else :chat="chat" class="message-preview"></LastMessage>
       </div>
     </a>
   </li>
