@@ -32,6 +32,8 @@ export const useChatStore = defineStore('chat', () => {
       })
 
       chatPreviews.value = users
+      //!Если авторизоваться, потом выйти и еще раз авторизоваться эта консоль лог не срабатывает
+      console.log(chatPreviews.value)
     })
   }
 
