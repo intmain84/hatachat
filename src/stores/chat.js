@@ -106,6 +106,8 @@ export const useChatStore = defineStore('chat', () => {
   //Logout
   const logOut = () => {
     user.value = {}
+    chatPreviews.value = []
+    msgGroups.value = {}
   }
 
   //Getters

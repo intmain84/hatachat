@@ -55,6 +55,7 @@ const getResult = async () => {
 const logout = async () => {
   await storeAuth.changeUserStatus(false)
   router.push({ name: 'home' })
+  storeChat.logOut()
 }
 </script>
 
@@ -80,7 +81,6 @@ const logout = async () => {
           dragMode: 'crop',
           aspectRatio: 1 / 1
         }"
-        @ready="ready"
       />
       <button class="btn mt-24" @click="getResult">Submit</button>
     </div>
@@ -99,6 +99,7 @@ const logout = async () => {
       />
       <img v-if="storeChat.user.avatar" class="avatar" :src="storeChat.user.avatar" />
       <div v-else class="avatar" :style="{ backgroundColor: storeChat.user.avatarBg }">
+        <!-- {{ Array.from(storeChat.user.nickname.toUpperCase())[0] }} -->
         {{ storeChat.user.nickname.charAt(0).toUpperCase() }}
       </div>
     </form>

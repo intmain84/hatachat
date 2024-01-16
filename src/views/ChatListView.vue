@@ -38,6 +38,7 @@ const showChatRoom = (userId) => {
 const logout = async () => {
   await storeAuth.changeUserStatus(false)
   router.push({ name: 'home' })
+  storeChat.logOut()
 }
 
 onBeforeMount(async () => {

@@ -19,8 +19,7 @@ const { chat } = toRefs(props)
 
 onMounted(async () => {
   onSnapshot(doc(db, 'users', storeChat.user.id), (doc) => {
-    // if (doc.data().typesNow.includes(chat.id)) { }
-    ;[typesMessage.value] = doc.data().typesNow.length
+    ;[typesMessage.value] = doc.data().typesNow
       ? doc.data().typesNow.filter((id) => id === chat.value.id)
       : ''
   })
