@@ -3,7 +3,7 @@ import { UserCircleIcon } from '@heroicons/vue/24/outline'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import ChatPreview from '@/components/ChatPreview.vue'
 
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, onMounted } from 'vue'
 import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
@@ -68,7 +68,7 @@ onBeforeMount(async () => {
         <RouterLink :to="{ name: 'myaccount' }" :class="{ activeChat: route.name === 'myaccount' }"
           ><UserCircleIcon class="icon24" /> My account</RouterLink
         >
-        <a href="#" @click.prevent="logout"><ArrowRightOnRectangleIcon class="icon24" /> Logout</a>
+        <a href="#" @click="logout"><ArrowRightOnRectangleIcon class="icon24" /> Logout</a>
       </footer>
     </aside>
     <main class="main">

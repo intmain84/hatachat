@@ -18,6 +18,7 @@ export const useChatStore = defineStore('chat', () => {
   const user = ref({})
   const chatPreviews = ref([])
   const msgGroups = ref({})
+  let unSetPreviews
 
   //Actions
   //Генерация массива для отображения превью в списке слева
@@ -25,15 +26,13 @@ export const useChatStore = defineStore('chat', () => {
     //Get all users except me
     const q = query(collection(db, 'users'), where('email', '!=', user.value.email))
 
-    onSnapshot(q, (snapshot) => {
+    unSetPreviews = onSnapshot(q, (snapshot) => {
       let users = []
       snapshot.forEach((user) => {
         users.push({ ...user.data(), id: user.id })
       })
 
       chatPreviews.value = users
-      //!Если авторизоваться, потом выйти и еще раз авторизоваться эта консоль лог не срабатывает
-      console.log(chatPreviews.value)
     })
   }
 
@@ -110,6 +109,7 @@ export const useChatStore = defineStore('chat', () => {
     user.value = {}
     chatPreviews.value = []
     msgGroups.value = {}
+    unSetPreviews()
   }
 
   //Getters

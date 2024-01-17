@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -23,6 +23,13 @@ const onSubmit = async () => {
     }
   }
 }
+
+//Код ниже для тестов. Потом удалить
+// import { useChatStore } from '@/stores/chat'
+// const storeChat = useChatStore()
+// onMounted(() => {
+//   console.log(storeChat.chatPreviews)
+// })
 </script>
 
 <template>
