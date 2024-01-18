@@ -11,7 +11,7 @@ const storeChat = useChatStore()
         {{ storeChat.user.nickname.charAt(0).toUpperCase() }}
       </div>
     </div>
-    <h1 class="mb-16">Hey, {{ storeChat.getCurrentUserNickname + '😀' }}!</h1>
+    <h1 class="mb-16">Hey, {{ storeChat.getCurrentUserNickname + '😀' }}</h1>
     <p>Choose anyone and start chatting</p>
   </div>
 </template>

@@ -32,7 +32,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div v-if="!lastMessage">No messages yet</div>
+  <div v-else>
     {{ messageFromUser === storeChat.user.id ? 'You' : props.chat.nickname }}: {{ lastMessage }}
   </div>
 </template>

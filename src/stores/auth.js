@@ -26,7 +26,11 @@ export const useAuthStore = defineStore('auth', () => {
     const querySnapshot = await getDocs(q)
     if (querySnapshot.size != 0) throw Error('This email is already registered')
 
-    const avatarBg = '#' + Math.floor(Math.random() * 16777215).toString(16)
+    const avatarBg =
+      '#' +
+      Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, '0')
 
     await addDoc(collection(db, 'users'), {
       avatar: '',
@@ -37,6 +41,8 @@ export const useAuthStore = defineStore('auth', () => {
       status: false,
       typesNow: []
     })
+
+    await loginUser(userSignUpData)
   }
   //Login
   const loginUser = async (userLoginData) => {

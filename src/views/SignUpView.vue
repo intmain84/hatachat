@@ -26,7 +26,7 @@ const onSubmit = async () => {
   } else {
     try {
       await storeAuth.registerUser(userSignUpData.value)
-      router.push('/')
+      router.push('/chatlist')
     } catch (error) {
       alert(error.message)
     }

@@ -109,7 +109,9 @@ export const useChatStore = defineStore('chat', () => {
     user.value = {}
     chatPreviews.value = []
     msgGroups.value = {}
-    unSetPreviews()
+    if (unSetPreviews) {
+      unSetPreviews()
+    }
   }
 
   //Getters

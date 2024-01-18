@@ -2,8 +2,10 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useChatStore } from '@/stores/chat'
 
 const storeAuth = useAuthStore()
+const storeChat = useChatStore()
 const router = useRouter()
 
 const userLoginData = ref({
@@ -24,12 +26,10 @@ const onSubmit = async () => {
   }
 }
 
-//Код ниже для тестов. Потом удалить
-// import { useChatStore } from '@/stores/chat'
-// const storeChat = useChatStore()
-// onMounted(() => {
-//   console.log(storeChat.chatPreviews)
-// })
+//Сброс данных если юзер на странице Логина
+onMounted(() => {
+  storeChat.logOut()
+})
 </script>
 
 <template>
@@ -38,9 +38,17 @@ const onSubmit = async () => {
     <main class="login-form">
       <form @submit.prevent="onSubmit">
         <h1 class="mb-24">Login</h1>
-        <input type="text" placeholder="Email" v-model="userLoginData.email" class="mb-24" />
+        <input
+          type="text"
+          autocomplete="email"
+          id="email"
+          placeholder="Email"
+          v-model="userLoginData.email"
+          class="mb-24"
+        />
         <input
           type="password"
+          id="password"
           placeholder="Password"
           v-model="userLoginData.password"
           class="mb-24"

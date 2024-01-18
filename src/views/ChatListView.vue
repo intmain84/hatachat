@@ -3,7 +3,7 @@ import { UserCircleIcon } from '@heroicons/vue/24/outline'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import ChatPreview from '@/components/ChatPreview.vue'
 
-import { ref, onBeforeMount, onMounted } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
@@ -38,7 +38,6 @@ const showChatRoom = (userId) => {
 const logout = async () => {
   await storeAuth.changeUserStatus(false)
   router.push({ name: 'home' })
-  storeChat.logOut()
 }
 
 onBeforeMount(async () => {
