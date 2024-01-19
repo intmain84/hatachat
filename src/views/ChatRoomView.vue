@@ -61,6 +61,7 @@ let msgId = ref('')
 let fromUserId = ref('')
 
 const handleBubbleContext = (event, id, userId) => {
+  //! Где-то наверно здесь нужно отправлять
   msgId.value = id
   fromUserId.value = userId
   //Setting context menu coordinates
@@ -93,7 +94,6 @@ const closeContextMenu = () => {
 
 //Delete message
 const deleteMessage = async (messageId) => {
-  //! ПРОДОЛЖИТЬ функционал в сторе
   await storeChat.deleteMessage(messageId)
 }
 
