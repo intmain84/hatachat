@@ -1,6 +1,6 @@
 <script setup>
 import { db } from '../firebase'
-import { doc, onSnapshot } from 'firebase/firestore'
+import { doc, onSnapshot, query, collection, and, or, where, orderBy } from 'firebase/firestore'
 import LastMessage from '@/components/LastMessage.vue'
 import { ref, toRefs, onMounted } from 'vue'
 import { useChatStore } from '@/stores/chat'
@@ -16,12 +16,28 @@ const props = defineProps({
 
 let typesMessage = ref('')
 const { chat } = toRefs(props)
+const unreadMessages = ref(0)
 
 onMounted(async () => {
+  //Is companion typing or not
   onSnapshot(doc(db, 'users', storeChat.user.id), (doc) => {
     ;[typesMessage.value] = doc.data().typesNow
       ? doc.data().typesNow.filter((id) => id === chat.value.id)
       : ''
+  })
+
+  //Getting unread nessages and summing them up
+  const q = query(
+    collection(db, 'messages'),
+    and(
+      where('fromUser', '==', props.chat.id),
+      where('toUser', '==', storeChat.user.id),
+      where('isRead', '==', false)
+    )
+  )
+
+  onSnapshot(q, (snapshot) => {
+    unreadMessages.value = snapshot.size
   })
 })
 </script>
@@ -40,14 +56,9 @@ onMounted(async () => {
       <div class="text-data">
         <div class="message-info">
           <div class="nickname">{{ chat.nickname }}</div>
+          <div v-if="unreadMessages" class="new-messages">{{ unreadMessages }}</div>
           <div v-if="chat.nickname" class="message-info"></div>
         </div>
-        <!-- Тут нужно вытаскивать isTyping из коллекции statuses. Сейчас тут он достается из коллекции users, но там его нет -->
-        <!-- <StatusTyping
-          v-if="storeChat.user.typesNow.includes(chat.id)"
-          class="message-preview"
-        ></StatusTyping> -->
-        <!-- ПОХОДУ ОН НЕ ДОСТАЕТ ИНФУ О ТЕКУЩЕМ ЮЗЕРЕ В РЕАЛЬНОМ ВРЕМЕНИ И НАДО КАК В LastMessage делать onSnapshot И ВЫТАСКИВАТЬ typesNow В РЕАЛ ТАЙМЕ -->
         <div v-if="typesMessage">is typing...</div>
         <LastMessage v-else :chat="chat" class="message-preview"></LastMessage>
       </div>
@@ -109,13 +120,15 @@ onMounted(async () => {
 .chatlist .user-preview .text-data .message-info .nickname {
   font-size: 1rem;
   font-weight: bold;
+  width: 100%;
 }
 
 .chatlist .user-preview .message-info .new-messages {
   background: #936ac8;
-  border-radius: 8px;
-  padding: 2px 5px;
-  margin-right: 8px;
+  border-radius: 100px;
+  padding: 2px 6px 5px;
+  min-width: 18px;
+  height: 18px;
 }
 
 .chatlist .user-preview .message-preview {
