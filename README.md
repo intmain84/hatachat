@@ -1,35 +1,25 @@
-# hatachat
+# 🗨️ HataChat
 
-This template should help get you started developing with Vue 3 in Vite.
+A real-time chat application built with Vue 3, Firebase, and Pinia.  
+Supports user authentication, live messaging, and image cropping.
 
-## Recommended IDE Setup
+---
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## 🚀 Features
 
-## Customize configuration
+- User authentication with Firebase Auth  
+- Real-time chat messaging powered by Firebase Firestore  
+- State management with Pinia  
+- Vue Router for navigation  
+- Image cropping for profile pictures with `vue-picture-cropper`  
+- Responsive and clean UI with Heroicons integration
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+---
 
-## Project Setup
+## 🛠️ Tech Stack
 
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- Vue 3 + Vite  
+- Firebase (Authentication + Firestore)  
+- Pinia (state management)  
+- Vue Router  
+- ESLint + Prettier for code quality
