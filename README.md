@@ -1,5 +1,7 @@
 # 🗨️ HataChat
 
+[LIVE PREVIEW](https://hatachat-c18bc.web.app/)
+
 A real-time chat application built with Vue 3, Firebase, and Pinia.  
 Supports user authentication, live messaging, and image cropping.
 
